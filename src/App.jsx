@@ -19,7 +19,8 @@ import {
   X,
   Palette,
   Eye,
-  CheckCircle2
+  CheckCircle2,
+  Fan
 } from 'lucide-react';
 
 // ============================================================================
@@ -59,8 +60,7 @@ const DEV_PROFILE = {
     'JavaScript (ES6+)',
     'React & Three.js',
     'Tailwind CSS',
-    'Dibujas a mano alzada',
-   
+    'Dibujas a mano alzada'
   ]
 };
 
@@ -302,11 +302,11 @@ const PROJECTS = [
     category: 'Entorno Interactivo Three.js',
     accent: '#00f5d4',
     summary:
-      'Bienvenido a mi espacio de trabajo virtual. Selecciona cualquiera de los proyectos del semestre en la barra inferior o haz clic directamente en los monitores, el gabinete PC o los paneles RGB de la pared.',
+      'Bienvenido a mi espacio de trabajo virtual. Selecciona cualquiera de los proyectos del semestre en la barra inferior o haz clic directamente en los botones de la pantalla de la PC, el gabinete o los paneles RGB.',
     tech: ['React', 'Three.js', 'Tailwind CSS', 'WebGL Canvas'],
     highlights: [
       'Renderizado 3D procedural en tiempo real con iluminación RGB dinámica.',
-      'Proyección en vivo de vistas previas y código en ambos monitores.',
+      'Pantalla de PC interactiva con botones directos y vistas previas en vivo.',
       'Demos funcionales integradas para revisión técnica inmediata.'
     ],
     liveUrl: null,
@@ -339,12 +339,12 @@ const PROJECTS = [
     category: 'Desarrollo Frontend & Consumo de APIs',
     accent: '#e3350d',
     summary:
-      'Aplicación web interactiva conectada a PokeAPI mediante JavaScript asíncrono (fetch / async-await). Permite buscar cualquier Pokémon por nombre o número, consultar su descripción oficial en español y recorrer recursivamente su cadena evolutiva y Megaevoluciones.',
+      'Página web interactiva que permite buscar Pokémon por su nombre o número. Incluye información, descripciones en español y detalles sobre sus evoluciones y formas especiales.',
     tech: ['HTML5', 'CSS3', 'JavaScript ES6+', 'PokeAPI REST', 'Async/Await'],
     highlights: [
-      'Consultas encadenadas a endpoints /pokemon, /pokemon-species y /evolution-chain.',
-      'Filtrado automático de descripciones (flavor_text_entries) en idioma español.',
-      'Detección dinámica de variedades "-mega" con renderizado de tarjetas.'
+      'Búsqueda de información y evoluciones de los Pokémon mediante la conexión con PokeAPI.',
+      'Obtención de descripciones de los Pokémon en español.',
+      'Identificación y presentación de las diferentes formas especiales, incluidas las Megaevoluciones.'
     ],
     liveUrl: null,
     repoUrl: DEV_PROFILE.github,
@@ -376,12 +376,12 @@ const PROJECTS = [
     category: 'Diseño UI/UX & Maquetación Web',
     accent: '#38bdf8',
     summary:
-      'Sitio web multipropósito desplegado en GitHub Pages, enfocado en estructura semántica, navegación fluida por anclas (#inicio), jerarquía visual moderna y diseño adaptable a dispositivos móviles y escritorio.',
+      'Página web creada para reunir y presentar información de manera clara y organizada, con un diseño moderno, fácil de navegar y adaptable tanto a computadoras como a dispositivos móviles.',
     tech: ['HTML5 Semántico', 'CSS3 Moderno', 'Responsive Design', 'GitHub Pages'],
     highlights: [
-      'Despliegue continuo en producción mediante GitHub Pages.',
-      'Maquetación estructurada con Flexbox / CSS Grid y navegación por secciones.',
-      'Código fuente organizado y versionado en GitHub.'
+      'Página publicada en internet mediante GitHub Pages.',
+      'Diseño organizado para facilitar la navegación entre las diferentes secciones.',
+      'Archivos y avances del proyecto organizados y guardados en GitHub.'
     ],
     liveUrl: 'https://emmanuel75449.github.io/PaginaWed/#inicio',
     repoUrl: 'https://github.com/Emmanuel75449/Dise-oWED',
@@ -452,7 +452,7 @@ const RGB_THEMES = [
 ];
 
 // ============================================================================
-// 5. DATOS SIMULADOS PARA EL SIMULADOR SQL DE MINIDBEAVER
+// 5. DATOS SIMULADOS PARA EL SIMULADOR SQL Y POKÉDEX EN MONITOR 3D
 // ============================================================================
 const SQL_PRESETS = [
   {
@@ -489,10 +489,125 @@ const SQL_PRESETS = [
   }
 ];
 
+const MONITOR_POKEMON_PRESETS = [
+  {
+    id: 6,
+    name: 'charizard',
+    title: '#6 - Charizard',
+    color1: '#fde047',
+    color2: '#ea580c',
+    desc: 'Escupe fuego tan caliente que funde las rocas. Causa incendios forestales sin querer.',
+    evos: ['Charmander', '→', 'Charmeleon', '→', 'Charizard', '★ Mega X/Y']
+  },
+  {
+    id: 25,
+    name: 'pikachu',
+    title: '#25 - Pikachu',
+    color1: '#fef08a',
+    color2: '#eab308',
+    desc: 'Cuando se enfada, este Pokémon descarga la energía que almacena en el interior de las bolsas de las mejillas.',
+    evos: ['Pichu', '→', 'Pikachu', '→', 'Raichu', '⚡ Gigamax']
+  },
+  {
+    id: 448,
+    name: 'lucario',
+    title: '#448 - Lucario',
+    color1: '#7dd3fc',
+    color2: '#2563eb',
+    desc: 'Puede percibir el aura de todas las cosas. Comprende el lenguaje humano y lee pensamientos.',
+    evos: ['Riolu', '→', 'Lucario', '★ Mega Lucario']
+  },
+  {
+    id: 94,
+    name: 'gengar',
+    title: '#94 - Gengar',
+    color1: '#d8b4fe',
+    color2: '#7e22ce',
+    desc: 'Para quitarle la vida a su presa, se desliza en su sombra y espera su oportunidad en silencio.',
+    evos: ['Gastly', '→', 'Haunter', '→', 'Gengar', '★ Mega Gengar']
+  }
+];
+
+const PAGINAWED_SECTIONS = {
+  Inicio: {
+    tag: '#INICIO • GITHUB PAGES DEPLOY',
+    headline: 'Diseño Web Moderno y Responsivo',
+    sub: 'Maquetación limpia, estructura semántica HTML5 y estilos CSS3 adaptables.'
+  },
+  Servicios: {
+    tag: '#SERVICIOS • DESARROLLO FRONTEND',
+    headline: 'Interfaces Web Rápidas y Accesibles',
+    sub: 'Sitios web optimizados para dispositivos móviles, tabletas y pantallas de escritorio.'
+  },
+  Galería: {
+    tag: '#GALERÍA • COMPONENTES UI/UX',
+    headline: 'Tarjetas, Grillas y Animaciones CSS',
+    sub: 'Diseño visual moderno con tipografía clara, contraste y navegación intuitiva.'
+  },
+  Contacto: {
+    tag: '#CONTACTO • REPOSITORIO GITHUB',
+    headline: 'Proyecto Publicado en GitHub Pages',
+    sub: 'Código fuente abierto y organizado en github.com/Emmanuel75449/Dise-oWED.'
+  }
+};
+
 // ============================================================================
-// 6. GENERADORES DE TEXTURAS PARA LAS PANTALLAS 3D
+// 6. DEFINICIÓN DE BOTONES INTERACTIVOS DE LA PANTALLA DEL MONITOR 3D
 // ============================================================================
-function drawMainMonitorCanvas(ctx, width, height, project, theme) {
+function getMonitorButtons(projectId) {
+  const buttons = [
+    // Botones de control de ventana superior
+    { id: 'win_home', x: 14, y: 12, w: 22, h: 22, label: 'Volver a Inicio OS' },
+    { id: 'win_open', x: 58, y: 12, w: 22, h: 22, label: 'Abrir Vista Completa' },
+
+    // Barra de botones inferior dentro de la pantalla de la PC (igual que la barra de abajo)
+    { id: 'nav_0', x: 40, y: 582, w: 165, h: 46, label: 'Inicio OS' },
+    { id: 'nav_1', x: 215, y: 582, w: 175, h: 46, label: '01. Pokédex' },
+    { id: 'nav_2', x: 400, y: 582, w: 185, h: 46, label: '02. PaginaWed' },
+    { id: 'nav_3', x: 595, y: 582, w: 195, h: 46, label: '03. MiniDBeaver' },
+    { id: 'nav_rgb', x: 855, y: 582, w: 165, h: 46, label: 'Cambiar Luz RGB' },
+    { id: 'nav_launch', x: 1030, y: 582, w: 210, h: 46, label: 'Abrir Demo en Vivo' }
+  ];
+
+  if (projectId === 'hub') {
+    buttons.push(
+      { id: 'hub_card_1', x: 60, y: 242, w: 365, h: 295, label: 'Abrir Proyecto 01: Pokédex' },
+      { id: 'hub_card_2', x: 455, y: 242, w: 365, h: 295, label: 'Abrir Proyecto 02: PaginaWed' },
+      { id: 'hub_card_3', x: 850, y: 242, w: 365, h: 295, label: 'Abrir Proyecto 03: MiniDBeaver' }
+    );
+  } else if (projectId === 'pokedex') {
+    buttons.push(
+      { id: 'poke_0', x: 190, y: 112, w: 135, h: 38, label: 'Buscar Charizard' },
+      { id: 'poke_1', x: 335, y: 112, w: 135, h: 38, label: 'Buscar Pikachu' },
+      { id: 'poke_2', x: 480, y: 112, w: 135, h: 38, label: 'Buscar Lucario' },
+      { id: 'poke_3', x: 625, y: 112, w: 135, h: 38, label: 'Buscar Gengar' },
+      { id: 'poke_live', x: 785, y: 112, w: 295, h: 38, label: 'Abrir Pokédex Interactiva Real' }
+    );
+  } else if (projectId === 'paginawed') {
+    buttons.push(
+      { id: 'web_Inicio', x: 790, y: 58, w: 95, h: 38, label: 'Sección Inicio' },
+      { id: 'web_Servicios', x: 895, y: 58, w: 105, h: 38, label: 'Sección Servicios' },
+      { id: 'web_Galería', x: 1010, y: 58, w: 95, h: 38, label: 'Sección Galería' },
+      { id: 'web_Contacto', x: 1115, y: 58, w: 105, h: 38, label: 'Sección Contacto' },
+      { id: 'web_live', x: 100, y: 288, w: 245, h: 44, label: 'Abrir Sitio Web en Vivo' }
+    );
+  } else if (projectId === 'minidbeaver') {
+    buttons.push(
+      { id: 'sql_0', x: 18, y: 315, w: 254, h: 44, label: 'Consulta: Todos los proyectos' },
+      { id: 'sql_1', x: 18, y: 368, w: 254, h: 44, label: 'Consulta: Filtrar Web' },
+      { id: 'sql_2', x: 18, y: 421, w: 254, h: 44, label: 'Consulta: Resumen Estado' },
+      { id: 'sql_run', x: 965, y: 52, w: 285, h: 34, label: 'Ejecutar Siguiente Query SQL' },
+      { id: 'sql_live', x: 18, y: 488, w: 254, h: 52, label: 'Abrir Simulador SQL Completo' }
+    );
+  }
+
+  return buttons;
+}
+
+// ============================================================================
+// 7. GENERADORES DE TEXTURAS PARA LAS PANTALLAS 3D
+// ============================================================================
+function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hoveredBtnId) {
   ctx.clearRect(0, 0, width, height);
 
   const bgGrad = ctx.createLinearGradient(0, 0, width, height);
@@ -501,18 +616,22 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme) {
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, width, height);
 
+  // Barra superior tipo navegador/SO
   ctx.fillStyle = '#05080f';
   ctx.fillRect(0, 0, width, 46);
-  ctx.fillStyle = '#ef4444';
-  ctx.beginPath(); ctx.arc(24, 23, 7, 0, Math.PI * 2); ctx.fill();
+
+  ctx.fillStyle = hoveredBtnId === 'win_home' ? '#fca5a5' : '#ef4444';
+  ctx.beginPath(); ctx.arc(24, 23, hoveredBtnId === 'win_home' ? 9 : 7, 0, Math.PI * 2); ctx.fill();
+
   ctx.fillStyle = '#f59e0b';
   ctx.beginPath(); ctx.arc(46, 23, 7, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#10b981';
-  ctx.beginPath(); ctx.arc(68, 23, 7, 0, Math.PI * 2); ctx.fill();
+
+  ctx.fillStyle = hoveredBtnId === 'win_open' ? '#6ee7b7' : '#10b981';
+  ctx.beginPath(); ctx.arc(68, 23, hoveredBtnId === 'win_open' ? 9 : 7, 0, Math.PI * 2); ctx.fill();
 
   ctx.fillStyle = '#1e293b';
   ctx.beginPath();
-  ctx.roundRect(105, 10, width - 260, 26, 8);
+  ctx.roundRect(105, 10, width - 360, 26, 8);
   ctx.fill();
   ctx.fillStyle = '#94a3b8';
   ctx.font = '14px monospace';
@@ -524,51 +643,61 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme) {
   };
   ctx.fillText(urlMap[project.id] || '', 120, 28);
 
+  ctx.fillStyle = theme.primary;
+  ctx.font = 'bold 13px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('● PANTALLA TÁCTIL / INTERACTIVA', width - 24, 28);
+  ctx.textAlign = 'left';
+
+  // --------------------------------------------------------------------------
+  // VISTA 0: HUB PRINCIPAL
+  // --------------------------------------------------------------------------
   if (project.id === 'hub') {
     ctx.strokeStyle = 'rgba(255,255,255,0.04)';
     ctx.lineWidth = 1;
     for (let x = 0; x < width; x += 40) {
-      ctx.beginPath(); ctx.moveTo(x, 46); ctx.lineTo(x, height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, 46); ctx.lineTo(x, height - 68); ctx.stroke();
     }
-    for (let y = 46; y < height; y += 40) {
+    for (let y = 46; y < height - 68; y += 40) {
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
     }
 
     ctx.fillStyle = theme.primary;
-    ctx.font = 'bold 18px monospace';
-    ctx.fillText('● SYSTEM READY // PORTAFOLIO DEL SEMESTRE', 60, 110);
+    ctx.font = 'bold 17px monospace';
+    ctx.fillText('● SYSTEM READY // PORTAFOLIO DEL SEMESTRE', 60, 98);
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 46px sans-serif';
-    ctx.fillText(`${DEV_PROFILE.nombre.toUpperCase()} — DEV STUDIO`, 60, 168);
+    ctx.font = 'bold 44px sans-serif';
+    ctx.fillText(`${DEV_PROFILE.nombre.toUpperCase()} — DEV STUDIO`, 60, 152);
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '22px sans-serif';
-    ctx.fillText('Haz clic en un proyecto abajo para proyectarlo en las pantallas', 60, 206);
+    ctx.font = '20px sans-serif';
+    ctx.fillText('Haz clic en cualquier tarjeta o usa los botones de la barra inferior de la pantalla', 60, 188);
 
     const cards = [
-      { num: '01', name: 'Pokédex Básica', sub: 'PokeAPI • Evoluciones • Megas', color: '#e3350d' },
-      { num: '02', name: 'PaginaWed', sub: 'HTML5 • CSS3 • GitHub Pages', color: '#38bdf8' },
-      { num: '03', name: 'MiniDBeaver', sub: 'SQL • Gestor Relacional', color: '#a855f7' }
+      { id: 'hub_card_1', num: '01', name: 'Pokédex Básica', sub: 'PokeAPI • Evoluciones • Megas', color: '#e3350d' },
+      { id: 'hub_card_2', num: '02', name: 'PaginaWed', sub: 'HTML5 • CSS3 • GitHub Pages', color: '#38bdf8' },
+      { id: 'hub_card_3', num: '03', name: 'MiniDBeaver', sub: 'SQL • Gestor Relacional', color: '#a855f7' }
     ];
 
     cards.forEach((c, idx) => {
       const cx = 60 + idx * 395;
-      const cy = 250;
+      const cy = 242;
       const cw = 365;
-      const ch = 260;
+      const ch = 295;
+      const isHovered = hoveredBtnId === c.id;
 
-      ctx.fillStyle = '#131c2e';
+      ctx.fillStyle = isHovered ? '#1b273e' : '#131c2e';
       ctx.beginPath();
       ctx.roundRect(cx, cy, cw, ch, 16);
       ctx.fill();
 
-      ctx.strokeStyle = c.color;
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = isHovered ? '#ffffff' : c.color;
+      ctx.lineWidth = isHovered ? 4 : 3;
       ctx.stroke();
 
       ctx.fillStyle = c.color;
-      ctx.font = 'bold 20px monospace';
+      ctx.font = 'bold 19px monospace';
       ctx.fillText(`PROYECTO ${c.num}`, cx + 24, cy + 44);
 
       ctx.fillStyle = '#ffffff';
@@ -577,193 +706,345 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme) {
 
       ctx.fillStyle = '#cbd5e1';
       ctx.font = '18px sans-serif';
-      ctx.fillText(c.sub, cx + 24, cy + 130);
+      ctx.fillText(c.sub, cx + 24, cy + 132);
 
-      ctx.fillStyle = c.color;
+      ctx.fillStyle = isHovered ? '#ffffff' : c.color;
       ctx.beginPath();
-      ctx.roundRect(cx + 24, cy + 185, 190, 42, 10);
+      ctx.roundRect(cx + 24, cy + 215, 235, 44, 10);
       ctx.fill();
 
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = isHovered ? '#090d16' : '#ffffff';
       ctx.font = 'bold 16px sans-serif';
-      ctx.fillText('VISTA PREVIA LISTA', cx + 42, cy + 211);
+      ctx.fillText('ABRIR PROYECTO →', cx + 46, cy + 243);
     });
   }
 
+  // --------------------------------------------------------------------------
+  // VISTA 1: POKÉDEX INTERACTIVA EN PANTALLA 3D
+  // --------------------------------------------------------------------------
   if (project.id === 'pokedex') {
+    const activePoke = MONITOR_POKEMON_PRESETS[subState.pokeIndex] || MONITOR_POKEMON_PRESETS[0];
+
     ctx.fillStyle = '#f0f2f5';
-    ctx.fillRect(0, 46, width, height - 46);
+    ctx.fillRect(0, 46, width, height - 114);
 
     ctx.fillStyle = '#e3350d';
-    ctx.font = 'bold 38px sans-serif';
+    ctx.font = 'bold 34px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Pokédex Básica', width / 2, 102);
+    ctx.fillText('Pokédex Básica — Selección Rápida en Pantalla', width / 2, 92);
 
+    // Botones rápidos de Pokémon
+    MONITOR_POKEMON_PRESETS.forEach((p, idx) => {
+      const bx = 190 + idx * 145;
+      const by = 112;
+      const bw = 135;
+      const bh = 38;
+      const btnId = `poke_${idx}`;
+      const selected = subState.pokeIndex === idx;
+      const hovered = hoveredBtnId === btnId;
+
+      ctx.fillStyle = selected ? '#e3350d' : hovered ? '#fee2e2' : '#ffffff';
+      ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 8); ctx.fill();
+      ctx.strokeStyle = '#e3350d';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = selected ? '#ffffff' : '#1e293b';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.fillText(p.name.toUpperCase(), bx + bw / 2, by + 24);
+    });
+
+    // Botón para abrir la app completa
+    const liveHovered = hoveredBtnId === 'poke_live';
+    ctx.fillStyle = liveHovered ? '#0f172a' : '#1e293b';
+    ctx.beginPath(); ctx.roundRect(785, 112, 295, 38, 8); ctx.fill();
+    ctx.strokeStyle = liveHovered ? '#38bdf8' : '#0f172a';
+    ctx.lineWidth = 2;
+    ctx.stroke();
     ctx.fillStyle = '#ffffff';
-    ctx.beginPath(); ctx.roundRect(width / 2 - 220, 120, 310, 42, 8); ctx.fill();
-    ctx.strokeStyle = '#e3350d'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#333333'; ctx.font = '18px sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText('charizard', width / 2 - 204, 147);
+    ctx.font = 'bold 15px sans-serif';
+    ctx.fillText('▶ Abrir Pokédex Interactiva Real', 785 + 295 / 2, 136);
 
-    ctx.fillStyle = '#e3350d';
-    ctx.beginPath(); ctx.roundRect(width / 2 + 102, 120, 118, 42, 8); ctx.fill();
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('Buscar', width / 2 + 161, 147);
-
+    // Tarjeta Pokémon
     ctx.fillStyle = '#ffffff';
-    ctx.beginPath(); ctx.roundRect(width / 2 - 340, 180, 680, 415, 16); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(width / 2 - 360, 166, 720, 392, 16); ctx.fill();
 
-    const orbGrad = ctx.createRadialGradient(width / 2, 245, 10, width / 2, 245, 52);
-    orbGrad.addColorStop(0, '#fde047');
-    orbGrad.addColorStop(0.6, '#f97316');
-    orbGrad.addColorStop(1, '#dc2626');
+    const orbGrad = ctx.createRadialGradient(width / 2, 225, 10, width / 2, 225, 48);
+    orbGrad.addColorStop(0, activePoke.color1);
+    orbGrad.addColorStop(1, activePoke.color2);
     ctx.fillStyle = orbGrad;
-    ctx.beginPath(); ctx.arc(width / 2, 245, 46, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(width / 2, 225, 42, 0, Math.PI * 2); ctx.fill();
 
     ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 26px sans-serif';
-    ctx.fillText('#6 - Charizard', width / 2, 322);
+    ctx.font = 'bold 25px sans-serif';
+    ctx.fillText(activePoke.title, width / 2, 296);
 
     ctx.fillStyle = '#f8f9fa';
-    ctx.beginPath(); ctx.roundRect(width / 2 - 300, 340, 600, 62, 10); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(width / 2 - 320, 312, 640, 56, 10); ctx.fill();
     ctx.fillStyle = '#475569';
-    ctx.font = 'italic 16px sans-serif';
-    ctx.fillText('Escupe fuego tan caliente que funde las rocas. Causa incendios forestales sin querer.', width / 2, 376);
+    ctx.font = 'italic 15px sans-serif';
+    ctx.fillText(activePoke.desc, width / 2, 345);
 
     ctx.fillStyle = '#334155';
-    ctx.font = 'bold 17px sans-serif';
-    ctx.fillText('Cadena Evolutiva & Megaevoluciones', width / 2, 432);
+    ctx.font = 'bold 16px sans-serif';
+    ctx.fillText('Cadena Evolutiva & Formas Especiales', width / 2, 396);
 
-    const evos = ['Charmander', '→', 'Charmeleon', '→', 'Charizard', '★ Mega X/Y'];
-    evos.forEach((item, i) => {
-      const ex = width / 2 - 275 + i * 110;
+    const startX = width / 2 - ((activePoke.evos.length - 1) * 105) / 2;
+    activePoke.evos.forEach((item, i) => {
+      const ex = startX + i * 105;
       if (item === '→') {
         ctx.fillStyle = '#94a3b8';
         ctx.font = 'bold 24px sans-serif';
-        ctx.fillText('→', ex, 505);
+        ctx.fillText('→', ex, 472);
       } else {
-        ctx.fillStyle = item.includes('Mega') ? '#fef2f2' : '#f8fafc';
-        ctx.beginPath(); ctx.roundRect(ex - 46, 452, 92, 95, 10); ctx.fill();
-        ctx.strokeStyle = item.includes('Mega') ? '#e3350d' : '#e2e8f0';
+        const isSpecial = item.includes('★') || item.includes('⚡');
+        ctx.fillStyle = isSpecial ? '#fef2f2' : '#f8fafc';
+        ctx.beginPath(); ctx.roundRect(ex - 48, 418, 96, 95, 10); ctx.fill();
+        ctx.strokeStyle = isSpecial ? '#e3350d' : '#e2e8f0';
         ctx.lineWidth = 2; ctx.stroke();
 
-        ctx.fillStyle = item.includes('Mega') ? '#e3350d' : '#f97316';
-        ctx.beginPath(); ctx.arc(ex, 490, 18, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isSpecial ? '#e3350d' : activePoke.color2;
+        ctx.beginPath(); ctx.arc(ex, 456, 17, 0, Math.PI * 2); ctx.fill();
 
         ctx.fillStyle = '#1e293b';
-        ctx.font = 'bold 13px sans-serif';
-        ctx.fillText(item, ex, 532);
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText(item, ex, 498);
       }
     });
     ctx.textAlign = 'left';
   }
 
+  // --------------------------------------------------------------------------
+  // VISTA 2: PAGINAWED INTERACTIVA EN PANTALLA 3D
+  // --------------------------------------------------------------------------
   if (project.id === 'paginawed') {
+    const activeSecName = subState.webSection || 'Inicio';
+    const secData = PAGINAWED_SECTIONS[activeSecName] || PAGINAWED_SECTIONS.Inicio;
+
     ctx.fillStyle = '#0f172a';
-    ctx.fillRect(0, 46, width, 64);
+    ctx.fillRect(0, 46, width, 62);
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 26px sans-serif';
     ctx.fillText('PaginaWed', 60, 86);
 
-    const navItems = ['Inicio', 'Servicios', 'Galería', 'Contacto'];
-    navItems.forEach((n, i) => {
-      ctx.fillStyle = i === 0 ? '#38bdf8' : '#cbd5e1';
-      ctx.font = '18px sans-serif';
-      ctx.fillText(n, width - 460 + i * 105, 86);
-    });
+    const navItems = [
+      { name: 'Inicio', x: 790, w: 95 },
+      { name: 'Servicios', x: 895, w: 105 },
+      { name: 'Galería', x: 1010, w: 95 },
+      { name: 'Contacto', x: 1115, w: 105 }
+    ];
+    navItems.forEach((n) => {
+      const btnId = `web_${n.name}`;
+      const isSelected = activeSecName === n.name;
+      const isHovered = hoveredBtnId === btnId;
 
-    const heroGrad = ctx.createLinearGradient(60, 130, width - 60, 360);
+      ctx.fillStyle = isSelected ? '#0284c7' : isHovered ? '#1e293b' : 'transparent';
+      ctx.beginPath();
+      ctx.roundRect(n.x, 58, n.w, 38, 8);
+      ctx.fill();
+
+      ctx.fillStyle = isSelected || isHovered ? '#ffffff' : '#cbd5e1';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.name, n.x + n.w / 2, 83);
+    });
+    ctx.textAlign = 'left';
+
+    const heroGrad = ctx.createLinearGradient(60, 126, width - 60, 354);
     heroGrad.addColorStop(0, '#0284c7');
     heroGrad.addColorStop(1, '#1d4ed8');
     ctx.fillStyle = heroGrad;
-    ctx.beginPath(); ctx.roundRect(60, 130, width - 120, 230, 18); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(60, 126, width - 120, 228, 18); ctx.fill();
 
     ctx.fillStyle = '#bae6fd';
     ctx.font = 'bold 16px monospace';
-    ctx.fillText('#INICIO • GITHUB PAGES DEPLOY', 100, 178);
+    ctx.fillText(secData.tag, 100, 172);
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 42px sans-serif';
-    ctx.fillText('Diseño Web Moderno y Responsivo', 100, 232);
+    ctx.font = 'bold 40px sans-serif';
+    ctx.fillText(secData.headline, 100, 224);
 
     ctx.fillStyle = '#e0f2fe';
-    ctx.font = '20px sans-serif';
-    ctx.fillText('Maquetación limpia, estructura semántica HTML5 y estilos CSS3 adaptables.', 100, 272);
+    ctx.font = '19px sans-serif';
+    ctx.fillText(secData.sub, 100, 264);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath(); ctx.roundRect(100, 296, 185, 42, 10); ctx.fill();
-    ctx.fillStyle = '#0369a1';
+    const webLiveHovered = hoveredBtnId === 'web_live';
+    ctx.fillStyle = webLiveHovered ? '#0f172a' : '#ffffff';
+    ctx.beginPath(); ctx.roundRect(100, 288, 245, 44, 10); ctx.fill();
+    ctx.fillStyle = webLiveHovered ? '#38bdf8' : '#0369a1';
     ctx.font = 'bold 17px sans-serif';
-    ctx.fillText('Explorar Sitio →', 124, 323);
+    ctx.fillText('Explorar Sitio en Vivo →', 120, 316);
 
     const cols = ['Estructura Semántica', 'Diseño Adaptable', 'Publicación Web'];
     cols.forEach((title, idx) => {
       const bx = 60 + idx * 395;
       ctx.fillStyle = '#1e293b';
-      ctx.beginPath(); ctx.roundRect(bx, 385, 365, 195, 14); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(bx, 376, 365, 182, 14); ctx.fill();
       ctx.fillStyle = '#38bdf8';
-      ctx.beginPath(); ctx.roundRect(bx + 24, 412, 48, 48, 10); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(bx + 24, 400, 44, 44, 10); ctx.fill();
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 22px sans-serif';
-      ctx.fillText(title, bx + 24, 495);
+      ctx.font = 'bold 21px sans-serif';
+      ctx.fillText(title, bx + 24, 480);
       ctx.fillStyle = '#94a3b8';
-      ctx.font = '16px sans-serif';
-      ctx.fillText('Optimizado para escritorio y móvil', bx + 24, 528);
+      ctx.font = '15px sans-serif';
+      ctx.fillText('Optimizado para escritorio y móvil', bx + 24, 512);
     });
   }
 
+  // --------------------------------------------------------------------------
+  // VISTA 3: MINIDBEAVER INTERACTIVO EN PANTALLA 3D
+  // --------------------------------------------------------------------------
   if (project.id === 'minidbeaver') {
+    const activeSql = SQL_PRESETS[subState.sqlIndex] || SQL_PRESETS[0];
+
     ctx.fillStyle = '#1e1b2e';
-    ctx.fillRect(0, 46, width, 44);
+    ctx.fillRect(0, 46, width, 46);
     ctx.fillStyle = '#a855f7';
     ctx.font = 'bold 18px monospace';
-    ctx.fillText('🐘 MiniDBeaver SQL Client  |  ▶ Ejecutar Query (Ctrl+Enter)', 28, 74);
+    ctx.fillText('🐘 MiniDBeaver SQL Client  |  universidad_db (MySQL)', 28, 75);
 
+    const runHovered = hoveredBtnId === 'sql_run';
+    ctx.fillStyle = runHovered ? '#9333ea' : '#7e22ce';
+    ctx.beginPath(); ctx.roundRect(965, 52, 285, 34, 8); ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 15px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('▶ Ejecutar Siguiente Query SQL', 965 + 285 / 2, 74);
+    ctx.textAlign = 'left';
+
+    // Panel izquierdo
     ctx.fillStyle = '#13111c';
-    ctx.fillRect(0, 90, 290, height - 90);
+    ctx.fillRect(0, 92, 290, height - 160);
     ctx.fillStyle = '#c084fc';
     ctx.font = 'bold 16px monospace';
-    ctx.fillText('▾ universidad_db', 24, 125);
-    const tables = ['  ▾ Tables', '    ▤ proyectos_semestre', '    ▤ estudiantes', '    ▤ materias', '    ▤ calificaciones'];
+    ctx.fillText('▾ universidad_db', 22, 124);
+    const tables = ['  ▾ Tables', '    ▤ proyectos_semestre', '    ▤ estudiantes', '    ▤ materias'];
     tables.forEach((t, i) => {
       ctx.fillStyle = i === 1 ? '#ffffff' : '#94a3b8';
-      ctx.font = '15px monospace';
-      ctx.fillText(t, 24, 158 + i * 32);
+      ctx.font = '14px monospace';
+      ctx.fillText(t, 22, 154 + i * 28);
     });
 
-    ctx.fillStyle = '#0d0c14';
-    ctx.fillRect(295, 90, width - 295, 210);
-    ctx.fillStyle = '#c084fc';
-    ctx.font = 'bold 18px monospace';
-    ctx.fillText('SELECT id, proyecto, tecnologia, estado', 320, 132);
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillText('FROM proyectos_semestre', 320, 164);
-    ctx.fillStyle = '#34d399';
-    ctx.fillText('WHERE estado = "Completado" ORDER BY id ASC;', 320, 196);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText('CONSULTAS RÁPIDAS:', 22, 298);
 
+    SQL_PRESETS.forEach((preset, idx) => {
+      const by = 315 + idx * 53;
+      const btnId = `sql_${idx}`;
+      const selected = subState.sqlIndex === idx;
+      const hovered = hoveredBtnId === btnId;
+
+      ctx.fillStyle = selected ? '#4c1d95' : hovered ? '#2e1065' : '#1e1b2e';
+      ctx.beginPath(); ctx.roundRect(18, by, 254, 44, 8); ctx.fill();
+      ctx.strokeStyle = selected || hovered ? '#c084fc' : '#312e81';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText(preset.label, 30, by + 27);
+    });
+
+    const sqlLiveHovered = hoveredBtnId === 'sql_live';
+    ctx.fillStyle = sqlLiveHovered ? '#a855f7' : '#3b0764';
+    ctx.beginPath(); ctx.roundRect(18, 488, 254, 52, 10); ctx.fill();
+    ctx.strokeStyle = '#c084fc';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Abrir Editor SQL Completo ↗', 18 + 254 / 2, 519);
+    ctx.textAlign = 'left';
+
+    // Editor SQL superior derecho
+    ctx.fillStyle = '#0d0c14';
+    ctx.fillRect(295, 92, width - 295, 165);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '13px monospace';
+    ctx.fillText('-- Haz clic en una consulta o en "Ejecutar Siguiente Query SQL"', 320, 122);
+
+    ctx.fillStyle = '#34d399';
+    ctx.font = 'bold 16px monospace';
+    const q = activeSql.query;
+    ctx.fillText(q.slice(0, 68), 320, 160);
+    if (q.length > 68) {
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(q.slice(68), 320, 190);
+    }
+
+    // Tabla de resultados
     ctx.fillStyle = '#181626';
-    ctx.fillRect(295, 305, width - 295, height - 305);
+    ctx.fillRect(295, 260, width - 295, height - 328);
 
     ctx.fillStyle = '#2e2647';
-    ctx.fillRect(310, 320, width - 325, 42);
+    ctx.fillRect(310, 274, width - 325, 40);
     ctx.fillStyle = '#e9d5ff';
-    ctx.font = 'bold 16px monospace';
-    ctx.fillText('ID    | PROYECTO             | TECNOLOGIA               | ESTADO', 328, 347);
+    ctx.font = 'bold 15px monospace';
+    ctx.fillText(activeSql.columns.map((c) => c.toUpperCase().padEnd(18, ' ')).join(' | '), 324, 300);
 
-    const rows = [
-      '01    | Pokédex Básica       | HTML / CSS / JS / API    | Desplegado',
-      '02    | PaginaWed            | HTML5 / CSS3 / Pages     | En Línea',
-      '03    | MiniDBeaver          | SQL / Gestor BD          | Completado',
-      '04    | Portafolio 3D        | React / Three.js         | Activo'
-    ];
-    rows.forEach((r, idx) => {
+    activeSql.rows.forEach((row, idx) => {
       ctx.fillStyle = idx % 2 === 0 ? '#1f1c30' : '#181626';
-      ctx.fillRect(310, 362 + idx * 46, width - 325, 44);
+      ctx.fillRect(310, 314 + idx * 46, width - 325, 44);
       ctx.fillStyle = '#f8fafc';
-      ctx.font = '15px monospace';
-      ctx.fillText(r, 328, 390 + idx * 46);
+      ctx.font = '14px monospace';
+      const formattedRow = row.map((cell) => String(cell).slice(0, 17).padEnd(18, ' ')).join(' | ');
+      ctx.fillText(formattedRow, 324, 342 + idx * 46);
     });
   }
+
+  // --------------------------------------------------------------------------
+  // BARRA DE BOTONES INFERIOR DENTRO DE LA PANTALLA DE LA PC (TASKBAR OS)
+  // --------------------------------------------------------------------------
+  ctx.fillStyle = 'rgba(5, 8, 17, 0.96)';
+  ctx.fillRect(0, 572, width, 68);
+  ctx.strokeStyle = theme.primary;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 572);
+  ctx.lineTo(width, 572);
+  ctx.stroke();
+
+  const dockButtons = [
+    { id: 'nav_0', x: 40, w: 165, label: 'Inicio OS', accent: '#00f5d4', active: project.id === 'hub' },
+    { id: 'nav_1', x: 215, w: 175, label: '01. Pokédex', accent: '#e3350d', active: project.id === 'pokedex' },
+    { id: 'nav_2', x: 400, w: 185, label: '02. PaginaWed', accent: '#38bdf8', active: project.id === 'paginawed' },
+    { id: 'nav_3', x: 595, w: 195, label: '03. MiniDBeaver', accent: '#a855f7', active: project.id === 'minidbeaver' },
+    { id: 'nav_rgb', x: 855, w: 165, label: '🎨 Luz RGB', accent: theme.secondary, active: false },
+    { id: 'nav_launch', x: 1030, w: 210, label: '▶ Abrir Demo', accent: theme.primary, active: false }
+  ];
+
+  dockButtons.forEach((btn) => {
+    const isHovered = hoveredBtnId === btn.id;
+    const by = 582;
+    const bh = 46;
+
+    ctx.fillStyle = btn.active
+      ? '#1e293b'
+      : isHovered
+      ? '#1e293b'
+      : btn.id === 'nav_launch'
+      ? `${theme.primary}28`
+      : '#0f172a';
+    ctx.beginPath();
+    ctx.roundRect(btn.x, by, btn.w, bh, 11);
+    ctx.fill();
+
+    ctx.strokeStyle = isHovered ? '#ffffff' : btn.active ? btn.accent : '#334155';
+    ctx.lineWidth = isHovered || btn.active ? 2.5 : 1.5;
+    ctx.stroke();
+
+    // Punto indicador de color
+    ctx.fillStyle = btn.accent;
+    ctx.beginPath();
+    ctx.arc(btn.x + 18, by + bh / 2, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = btn.active || isHovered ? '#ffffff' : '#cbd5e1';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.fillText(btn.label, btn.x + 32, by + 29);
+  });
 }
 
 function drawVerticalCodeCanvas(ctx, width, height, project, theme, scrollOffset) {
@@ -780,7 +1061,7 @@ function drawVerticalCodeCanvas(ctx, width, height, project, theme, scrollOffset
   const lineHeight = 44;
   ctx.font = '20px monospace';
 
-  for (let i = 0; i < 28; i++) {
+  for (let i = 0; i < 26; i++) {
     const lineIdx = (i + scrollOffset) % lines.length;
     const text = lines[lineIdx];
     const y = 110 + i * lineHeight;
@@ -807,10 +1088,24 @@ function drawVerticalCodeCanvas(ctx, width, height, project, theme, scrollOffset
 
     ctx.fillText(text, 74, y);
   }
+
+  // Botón inferior en monitor vertical
+  ctx.fillStyle = '#1e293b';
+  ctx.beginPath();
+  ctx.roundRect(28, height - 74, width - 56, 50, 12);
+  ctx.fill();
+  ctx.strokeStyle = project.accent || theme.primary;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('CLIC PARA INSPECCIONAR CÓDIGO', width / 2, height - 42);
+  ctx.textAlign = 'left';
 }
 
 // ============================================================================
-// 7. COMPONENTE PRINCIPAL DEL PORTAFOLIO 3D
+// 8. COMPONENTE PRINCIPAL DEL PORTAFOLIO 3D
 // ============================================================================
 export default function App() {
   const mountRef = useRef(null);
@@ -822,6 +1117,7 @@ export default function App() {
   const [openModalProject, setOpenModalProject] = useState(null);
   const [modalTab, setModalTab] = useState('preview');
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [pcTurboMode, setPcTurboMode] = useState(false);
 
   const [selectedSqlIndex, setSelectedSqlIndex] = useState(0);
   const [customSqlText, setCustomSqlText] = useState(SQL_PRESETS[0].query);
@@ -829,6 +1125,14 @@ export default function App() {
   const activeProjectRef = useRef(PROJECTS[0]);
   const themeRef = useRef(RGB_THEMES[0]);
   const cameraPresetRef = useRef('overview');
+  const pcTurboRef = useRef(false);
+  const hoveredMonitorBtnRef = useRef(null);
+  const monitorSubStateRef = useRef({
+    pokeIndex: 0,
+    webSection: 'Inicio',
+    sqlIndex: 0
+  });
+
   const updateScreensRef = useRef(null);
   const updateLightsRef = useRef(null);
 
@@ -857,6 +1161,13 @@ export default function App() {
   }, [cameraPreset]);
 
   useEffect(() => {
+    pcTurboRef.current = pcTurboMode;
+    if (updateLightsRef.current) {
+      updateLightsRef.current(themeRef.current);
+    }
+  }, [pcTurboMode]);
+
+  useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
 
@@ -878,13 +1189,13 @@ export default function App() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.18;
     container.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
-    controls.minDistance = 1.7;
+    controls.minDistance = 1.65;
     controls.maxDistance = 8.5;
     controls.maxPolarAngle = Math.PI / 2 - 0.04;
     controls.target.set(0, 1.35, -0.4);
@@ -906,9 +1217,14 @@ export default function App() {
     wallRgbLight.position.set(-1.6, 2.7, -1.3);
     scene.add(wallRgbLight);
 
-    const pcRgbLight = new THREE.PointLight(themeRef.current.primary, 3.0, 5);
-    pcRgbLight.position.set(1.85, 1.45, -0.35);
-    scene.add(pcRgbLight);
+    // Luces RGB dedicadas al interior y frente de la PC
+    const pcInteriorLight = new THREE.PointLight(themeRef.current.primary, 5.2, 3.6);
+    pcInteriorLight.position.set(1.62, 1.48, -0.48);
+    scene.add(pcInteriorLight);
+
+    const pcFrontLight = new THREE.PointLight(themeRef.current.secondary, 3.8, 3.5);
+    pcFrontLight.position.set(1.52, 1.44, 0.08);
+    scene.add(pcFrontLight);
 
     const screenGlowLight = new THREE.PointLight('#60a5fa', 1.6, 4.5);
     screenGlowLight.position.set(0, 1.55, -0.1);
@@ -980,12 +1296,20 @@ export default function App() {
 
     const interactiveMeshes = [];
 
-    // 1. MONITOR CURVO ULTRAWIDE PRINCIPAL
+    // 1. MONITOR CURVO ULTRAWIDE PRINCIPAL (INTERACTIVO POR UV)
     const mainCanvas = document.createElement('canvas');
     mainCanvas.width = 1280;
     mainCanvas.height = 640;
     const mainCtx = mainCanvas.getContext('2d');
-    drawMainMonitorCanvas(mainCtx, 1280, 640, activeProjectRef.current, themeRef.current);
+    drawMainMonitorCanvas(
+      mainCtx,
+      1280,
+      640,
+      activeProjectRef.current,
+      themeRef.current,
+      monitorSubStateRef.current,
+      null
+    );
     const mainTexture = new THREE.CanvasTexture(mainCanvas);
     mainTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -1006,7 +1330,7 @@ export default function App() {
     const screenMat = new THREE.MeshBasicMaterial({ map: mainTexture });
     const mainScreenMesh = new THREE.Mesh(screenGeo, screenMat);
     mainScreenMesh.position.set(0, 1.56, 2.38);
-    mainScreenMesh.userData = { partId: 'mainMonitor', label: 'Monitor Principal: Haz clic para abrir el proyecto' };
+    mainScreenMesh.userData = { partId: 'mainMonitor', label: 'Pantalla PC: Haz clic en los botones del monitor' };
     scene.add(mainScreenMesh);
     interactiveMeshes.push(mainScreenMesh);
 
@@ -1059,7 +1383,7 @@ export default function App() {
       new THREE.MeshBasicMaterial({ map: sideTexture })
     );
     sideScreenMesh.position.z = 0.028;
-    sideScreenMesh.userData = { partId: 'sideMonitor', label: 'Monitor de Código: Ver código fuente del proyecto' };
+    sideScreenMesh.userData = { partId: 'sideMonitor', label: 'Monitor de Código: Ver código fuente completo' };
     sideGroup.add(sideScreenMesh);
     interactiveMeshes.push(sideScreenMesh);
 
@@ -1068,74 +1392,243 @@ export default function App() {
     sideGroup.add(sideStand);
     scene.add(sideGroup);
 
-    // 3. GABINETE PC GAMER CON VENTILADORES RGB
+    // 3. GABINETE PC GAMER HUECO CON CRISTAL TEMPLADO, VENTILADORES RGB Y LUCES
     const pcGroup = new THREE.Group();
     pcGroup.position.set(1.65, 1.44, -0.52);
-    pcGroup.rotation.y = -0.22;
+    pcGroup.rotation.y = -0.24;
 
-    const pcBody = new THREE.Mesh(
-      new THREE.BoxGeometry(0.52, 0.98, 0.96),
-      new THREE.MeshStandardMaterial({ color: '#0d0f17', metalness: 0.5, roughness: 0.35 })
+    const chassisMat = new THREE.MeshStandardMaterial({
+      color: '#0d1018',
+      metalness: 0.65,
+      roughness: 0.3
+    });
+
+    // Hitbox invisible para seleccionar toda la PC fácilmente
+    const pcHitbox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.56, 1.0, 1.0),
+      new THREE.MeshBasicMaterial({ visible: false })
     );
-    pcBody.userData = { partId: 'pcTower', label: 'PC Gamer RTX: Inspeccionar hardware y especificaciones' };
-    pcGroup.add(pcBody);
-    interactiveMeshes.push(pcBody);
+    pcHitbox.userData = {
+      partId: 'pcTower',
+      label: 'PC Gamer RGB: Clic para enfocar o activar Turbo Ventiladores'
+    };
+    pcGroup.add(pcHitbox);
+    interactiveMeshes.push(pcHitbox);
 
-    const glassPanel = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.88, 0.88),
+    // Estructura hueca del gabinete (base PSU, techo, pared trasera, pared derecha, pilares)
+    const psuShroud = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.2, 0.96), chassisMat);
+    psuShroud.position.set(0, -0.39, 0);
+    pcGroup.add(psuShroud);
+
+    const topPanel = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.06, 0.96), chassisMat);
+    topPanel.position.set(0, 0.46, 0);
+    pcGroup.add(topPanel);
+
+    const backPanel = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.98, 0.05), chassisMat);
+    backPanel.position.set(0, 0, -0.455);
+    pcGroup.add(backPanel);
+
+    const rightPanel = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.98, 0.96), chassisMat);
+    rightPanel.position.set(0.24, 0, 0);
+    pcGroup.add(rightPanel);
+
+    // Pilares frontales y esquinas
+    [
+      [-0.24, 0.46],
+      [0.24, 0.46],
+      [-0.24, -0.46]
+    ].forEach(([px, pz]) => {
+      const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.98, 0.04), chassisMat);
+      pillar.position.set(px, 0, pz);
+      pcGroup.add(pillar);
+    });
+
+    // Tiras LED RGB interiores (superior, inferior sobre PSU y frontal)
+    const pcLedPrimaryMat = new THREE.MeshBasicMaterial({ color: themeRef.current.primary });
+    const pcLedSecondaryMat = new THREE.MeshBasicMaterial({ color: themeRef.current.secondary });
+
+    const topLedStrip = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.86), pcLedPrimaryMat);
+    topLedStrip.position.set(-0.22, 0.42, 0);
+    pcGroup.add(topLedStrip);
+
+    const psuLedStrip = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.86), pcLedSecondaryMat);
+    psuLedStrip.position.set(-0.255, -0.28, 0);
+    pcGroup.add(psuLedStrip);
+
+    const frontLedLeft = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.9, 0.015), pcLedPrimaryMat);
+    frontLedLeft.position.set(-0.25, 0, 0.482);
+    pcGroup.add(frontLedLeft);
+
+    const frontLedRight = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.9, 0.015), pcLedSecondaryMat);
+    frontLedRight.position.set(0.25, 0, 0.482);
+    pcGroup.add(frontLedRight);
+
+    // Motherboard + Bloque AIO RGB + Memorias RAM RGB
+    const mobo = new THREE.Mesh(
+      new THREE.BoxGeometry(0.03, 0.62, 0.56),
+      new THREE.MeshStandardMaterial({ color: '#111827', metalness: 0.4, roughness: 0.5 })
+    );
+    mobo.position.set(0.20, 0.06, -0.08);
+    pcGroup.add(mobo);
+
+    const cpuPump = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.065, 0.065, 0.05, 24),
+      new THREE.MeshStandardMaterial({ color: '#090d16', metalness: 0.7, roughness: 0.2 })
+    );
+    cpuPump.rotation.z = Math.PI / 2;
+    cpuPump.position.set(0.16, 0.16, -0.06);
+    pcGroup.add(cpuPump);
+
+    const cpuPumpRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.052, 0.01, 12, 24),
+      pcLedSecondaryMat
+    );
+    cpuPumpRing.rotation.y = Math.PI / 2;
+    cpuPumpRing.position.set(0.132, 0.16, -0.06);
+    pcGroup.add(cpuPumpRing);
+
+    // 2 Sticks de Memoria RAM RGB
+    [-0.17, -0.21].forEach((rz, idx) => {
+      const ram = new THREE.Mesh(
+        new THREE.BoxGeometry(0.035, 0.22, 0.014),
+        idx === 0 ? pcLedPrimaryMat : pcLedSecondaryMat
+      );
+      ram.position.set(0.165, 0.17, rz);
+      pcGroup.add(ram);
+    });
+
+    // Tarjeta Gráfica RTX con barra RGB
+    const gpuMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(0.26, 0.075, 0.62),
+      new THREE.MeshStandardMaterial({ color: '#1e293b', metalness: 0.8, roughness: 0.2 })
+    );
+    gpuMesh.position.set(0.05, -0.08, 0.02);
+    pcGroup.add(gpuMesh);
+
+    const gpuStrip = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.022, 0.58), pcLedSecondaryMat);
+    gpuStrip.position.set(-0.082, -0.08, 0.02);
+    pcGroup.add(gpuStrip);
+
+    // Función constructora de ventiladores RGB con doble aro LED y aspas iluminadas
+    const fans = [];
+    const bladeMat = new THREE.MeshStandardMaterial({
+      color: '#cbd5e1',
+      emissive: themeRef.current.primary,
+      emissiveIntensity: 0.35,
+      roughness: 0.25,
+      metalness: 0.2
+    });
+
+    function createRgbFan(radius = 0.105) {
+      const fanUnit = new THREE.Group();
+
+      // Marco oscuro del ventilador
+      const outerHousing = new THREE.Mesh(
+        new THREE.TorusGeometry(radius + 0.012, 0.012, 10, 28),
+        new THREE.MeshStandardMaterial({ color: '#090b10', roughness: 0.4 })
+      );
+      fanUnit.add(outerHousing);
+
+      // Aro LED RGB exterior
+      const outerRing = new THREE.Mesh(
+        new THREE.TorusGeometry(radius, 0.013, 14, 32),
+        pcLedPrimaryMat
+      );
+      fanUnit.add(outerRing);
+
+      // Aro LED RGB interior
+      const innerRing = new THREE.Mesh(
+        new THREE.TorusGeometry(radius * 0.36, 0.008, 12, 24),
+        pcLedSecondaryMat
+      );
+      fanUnit.add(innerRing);
+
+      // Grupo de 7 aspas giratorias
+      const rotor = new THREE.Group();
+      const hub = new THREE.Mesh(
+        new THREE.CylinderGeometry(radius * 0.3, radius * 0.3, 0.024, 20),
+        new THREE.MeshStandardMaterial({ color: '#0f172a', metalness: 0.6 })
+      );
+      hub.rotation.x = Math.PI / 2;
+      rotor.add(hub);
+
+      const bladeCount = 7;
+      for (let b = 0; b < bladeCount; b++) {
+        const angle = (b * Math.PI * 2) / bladeCount;
+        const bladeHolder = new THREE.Group();
+        bladeHolder.rotation.z = angle;
+
+        const blade = new THREE.Mesh(
+          new THREE.BoxGeometry(radius * 0.32, radius * 0.68, 0.006),
+          bladeMat
+        );
+        blade.position.y = radius * 0.56;
+        blade.rotation.y = 0.42;
+        bladeHolder.add(blade);
+        rotor.add(bladeHolder);
+      }
+
+      fanUnit.add(rotor);
+      fans.push(rotor);
+      return fanUnit;
+    }
+
+    // 3 Ventiladores frontales RGB de 120mm (orientados hacia +Z)
+    [0.28, 0.02, -0.24].forEach((fy) => {
+      const frontFan = createRgbFan(0.112);
+      frontFan.position.set(0, fy, 0.435);
+      pcGroup.add(frontFan);
+    });
+
+    // 2 Ventiladores superiores RGB del radiador (orientados hacia abajo)
+    [0.12, -0.18].forEach((fz) => {
+      const topFan = createRgbFan(0.105);
+      topFan.rotation.x = Math.PI / 2;
+      topFan.position.set(-0.02, 0.405, fz);
+      pcGroup.add(topFan);
+    });
+
+    // 1 Ventilador trasero RGB de extracción
+    const rearFan = createRgbFan(0.105);
+    rearFan.position.set(-0.02, 0.25, -0.415);
+    pcGroup.add(rearFan);
+
+    // 2 Ventiladores RGB debajo de la tarjeta gráfica RTX
+    [0.15, -0.11].forEach((gz) => {
+      const gpuFan = createRgbFan(0.082);
+      gpuFan.rotation.x = Math.PI / 2;
+      gpuFan.position.set(0.04, -0.125, gz);
+      pcGroup.add(gpuFan);
+    });
+
+    // Paneles de cristal templado (lateral izquierdo y frontal)
+    const sideGlassPanel = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.88, 0.72),
       new THREE.MeshPhysicalMaterial({
-        color: '#93c5fd',
+        color: '#bae6fd',
         transparent: true,
-        opacity: 0.16,
-        roughness: 0.1,
+        opacity: 0.11,
+        roughness: 0.08,
         metalness: 0.1
       })
     );
-    glassPanel.rotation.y = -Math.PI / 2;
-    glassPanel.position.set(-0.265, 0, 0);
-    pcGroup.add(glassPanel);
+    sideGlassPanel.rotation.y = -Math.PI / 2;
+    sideGlassPanel.position.set(-0.258, 0.08, 0);
+    pcGroup.add(sideGlassPanel);
 
-    const gpuMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(0.24, 0.08, 0.58),
-      new THREE.MeshStandardMaterial({ color: '#1e293b', metalness: 0.8, roughness: 0.2 })
+    const frontGlassPanel = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.45, 0.88),
+      new THREE.MeshPhysicalMaterial({
+        color: '#bae6fd',
+        transparent: true,
+        opacity: 0.14,
+        roughness: 0.08,
+        metalness: 0.1
+      })
     );
-    gpuMesh.position.set(-0.04, -0.05, 0.02);
-    pcGroup.add(gpuMesh);
+    frontGlassPanel.position.set(0, 0.02, 0.478);
+    pcGroup.add(frontGlassPanel);
 
-    const gpuStripMat = new THREE.MeshBasicMaterial({ color: themeRef.current.secondary });
-    const gpuStrip = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.54), gpuStripMat);
-    gpuStrip.position.set(-0.165, -0.05, 0.02);
-    pcGroup.add(gpuStrip);
-
-    const fans = [];
-    const fanRingMat = new THREE.MeshBasicMaterial({ color: themeRef.current.primary });
-    const fanPositions = [
-      [-0.08, 0.26, 0.46],
-      [-0.08, 0.0, 0.46],
-      [-0.08, -0.26, 0.46],
-      [-0.14, 0.24, -0.35]
-    ];
-
-    fanPositions.forEach(([fx, fy, fz]) => {
-      const fanGroup = new THREE.Group();
-      fanGroup.position.set(fx, fy, fz);
-
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.014, 12, 24), fanRingMat);
-      fanGroup.add(ring);
-
-      const bladesGroup = new THREE.Group();
-      for (let b = 0; b < 5; b++) {
-        const blade = new THREE.Mesh(
-          new THREE.BoxGeometry(0.03, 0.16, 0.008),
-          new THREE.MeshStandardMaterial({ color: '#334155' })
-        );
-        blade.rotation.z = (b * Math.PI) / 2.5;
-        bladesGroup.add(blade);
-      }
-      fanGroup.add(bladesGroup);
-      fans.push(bladesGroup);
-      pcGroup.add(fanGroup);
-    });
     scene.add(pcGroup);
 
     // 4. PANELES HEXAGONALES NANOLEAF EN LA PARED
@@ -1189,7 +1682,7 @@ export default function App() {
 
     const keyGlow = new THREE.Mesh(
       new THREE.BoxGeometry(0.72, 0.01, 0.24),
-      gpuStripMat
+      pcLedSecondaryMat
     );
     keyGlow.position.set(-0.25, 0.996, -0.06);
     scene.add(keyGlow);
@@ -1227,8 +1720,17 @@ export default function App() {
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
+    // ACTUALIZADORES DE PANTALLAS Y LUCES
     updateScreensRef.current = (proj, thm) => {
-      drawMainMonitorCanvas(mainCtx, 1280, 640, proj, thm);
+      drawMainMonitorCanvas(
+        mainCtx,
+        1280,
+        640,
+        proj,
+        thm,
+        monitorSubStateRef.current,
+        hoveredMonitorBtnRef.current
+      );
       mainTexture.needsUpdate = true;
 
       drawVerticalCodeCanvas(sideCtx, 720, 1280, proj, thm, 0);
@@ -1236,39 +1738,150 @@ export default function App() {
     };
 
     updateLightsRef.current = (thm) => {
+      const turboBoost = pcTurboRef.current ? 1.55 : 1.0;
       deskRgbLight.color.set(thm.primary);
       wallRgbLight.color.set(thm.secondary);
-      pcRgbLight.color.set(thm.primary);
+      pcInteriorLight.color.set(thm.primary);
+      pcInteriorLight.intensity = 5.2 * turboBoost;
+      pcFrontLight.color.set(thm.secondary);
+      pcFrontLight.intensity = 3.8 * turboBoost;
+
       deskLedMat.color.set(thm.primary);
-      fanRingMat.color.set(thm.primary);
-      gpuStripMat.color.set(thm.secondary);
+      pcLedPrimaryMat.color.set(thm.primary);
+      pcLedSecondaryMat.color.set(thm.secondary);
+      bladeMat.emissive.set(thm.primary);
+      bladeMat.emissiveIntensity = pcTurboRef.current ? 0.65 : 0.35;
       particleMat.color.set(thm.primary);
+
       hexMeshes.forEach((h, idx) => {
         h.material.color.set(idx % 2 === 0 ? thm.primary : thm.secondary);
       });
     };
 
+    // RAYCASTING + DETECCIÓN DE BOTONES EN LA PANTALLA DE LA PC
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
     let downPos = { x: 0, y: 0 };
 
-    const getIntersectedPart = (clientX, clientY) => {
+    const getHitDetails = (clientX, clientY) => {
       const rect = renderer.domElement.getBoundingClientRect();
       pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
       raycaster.setFromCamera(pointer, camera);
       const hits = raycaster.intersectObjects(interactiveMeshes, false);
-      return hits.length > 0 ? hits[0].object.userData : null;
+      if (hits.length === 0) return null;
+
+      const hit = hits[0];
+      const userData = hit.object.userData;
+
+      if (userData.partId === 'mainMonitor' && hit.uv) {
+        const cx = hit.uv.x * 1280;
+        const cy = (1 - hit.uv.y) * 640;
+        const btns = getMonitorButtons(activeProjectRef.current.id);
+        const matchedBtn = btns.find(
+          (b) => cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h
+        );
+        return { ...userData, monitorBtn: matchedBtn || null };
+      }
+
+      return { ...userData, monitorBtn: null };
+    };
+
+    const executeMonitorButtonAction = (btnId) => {
+      if (btnId === 'win_home' || btnId === 'nav_0') {
+        setActiveProjectIndex(0);
+        setCameraPreset('mainMonitor');
+      } else if (btnId === 'nav_1' || btnId === 'hub_card_1') {
+        setActiveProjectIndex(1);
+        setCameraPreset('mainMonitor');
+      } else if (btnId === 'nav_2' || btnId === 'hub_card_2') {
+        setActiveProjectIndex(2);
+        setCameraPreset('mainMonitor');
+      } else if (btnId === 'nav_3' || btnId === 'hub_card_3') {
+        setActiveProjectIndex(3);
+        setCameraPreset('mainMonitor');
+      } else if (btnId === 'nav_rgb') {
+        setThemeIndex((prev) => (prev + 1) % RGB_THEMES.length);
+      } else if (btnId === 'nav_launch' || btnId === 'win_open') {
+        if (activeProjectRef.current.id === 'hub') {
+          setShowProfileModal(true);
+        } else {
+          setModalTab('preview');
+          setOpenModalProject(activeProjectRef.current);
+        }
+      } else if (btnId.startsWith('poke_')) {
+        if (btnId === 'poke_live') {
+          setModalTab('preview');
+          setOpenModalProject(activeProjectRef.current);
+        } else {
+          const idx = Number(btnId.split('_')[1]);
+          monitorSubStateRef.current.pokeIndex = idx;
+          updateScreensRef.current(activeProjectRef.current, themeRef.current);
+        }
+      } else if (btnId.startsWith('web_')) {
+        if (btnId === 'web_live') {
+          setModalTab('preview');
+          setOpenModalProject(activeProjectRef.current);
+        } else {
+          const sec = btnId.replace('web_', '');
+          monitorSubStateRef.current.webSection = sec;
+          updateScreensRef.current(activeProjectRef.current, themeRef.current);
+        }
+      } else if (btnId.startsWith('sql_')) {
+        if (btnId === 'sql_live') {
+          setModalTab('preview');
+          setOpenModalProject(activeProjectRef.current);
+        } else if (btnId === 'sql_run') {
+          const nextSql = (monitorSubStateRef.current.sqlIndex + 1) % SQL_PRESETS.length;
+          monitorSubStateRef.current.sqlIndex = nextSql;
+          setSelectedSqlIndex(nextSql);
+          setCustomSqlText(SQL_PRESETS[nextSql].query);
+          updateScreensRef.current(activeProjectRef.current, themeRef.current);
+        } else {
+          const idx = Number(btnId.split('_')[1]);
+          monitorSubStateRef.current.sqlIndex = idx;
+          setSelectedSqlIndex(idx);
+          setCustomSqlText(SQL_PRESETS[idx].query);
+          updateScreensRef.current(activeProjectRef.current, themeRef.current);
+        }
+      }
     };
 
     const onPointerMove = (e) => {
-      const hit = getIntersectedPart(e.clientX, e.clientY);
+      const hit = getHitDetails(e.clientX, e.clientY);
       if (hit) {
         renderer.domElement.style.cursor = 'pointer';
-        setHoveredPart(hit.label);
+        if (hit.partId === 'mainMonitor') {
+          const newBtnId = hit.monitorBtn ? hit.monitorBtn.id : null;
+          if (hoveredMonitorBtnRef.current !== newBtnId) {
+            hoveredMonitorBtnRef.current = newBtnId;
+            if (updateScreensRef.current) {
+              updateScreensRef.current(activeProjectRef.current, themeRef.current);
+            }
+          }
+          setHoveredPart(
+            hit.monitorBtn
+              ? `Pantalla PC → ${hit.monitorBtn.label}`
+              : 'Pantalla PC: Selecciona un botón en el monitor'
+          );
+        } else {
+          if (hoveredMonitorBtnRef.current !== null) {
+            hoveredMonitorBtnRef.current = null;
+            if (updateScreensRef.current) {
+              updateScreensRef.current(activeProjectRef.current, themeRef.current);
+            }
+          }
+          setHoveredPart(hit.label);
+        }
       } else {
         renderer.domElement.style.cursor = 'grab';
         setHoveredPart(null);
+        if (hoveredMonitorBtnRef.current !== null) {
+          hoveredMonitorBtnRef.current = null;
+          if (updateScreensRef.current) {
+            updateScreensRef.current(activeProjectRef.current, themeRef.current);
+          }
+        }
       }
     };
 
@@ -1280,16 +1893,16 @@ export default function App() {
       const dist = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
       if (dist > 6) return;
 
-      const hit = getIntersectedPart(e.clientX, e.clientY);
+      const hit = getHitDetails(e.clientX, e.clientY);
       if (!hit) return;
 
       if (hit.partId === 'wallPanels') {
         setThemeIndex((prev) => (prev + 1) % RGB_THEMES.length);
       } else if (hit.partId === 'mainMonitor') {
-        setCameraPreset('mainMonitor');
-        if (activeProjectRef.current.id !== 'hub') {
-          setModalTab('preview');
-          setOpenModalProject(activeProjectRef.current);
+        if (hit.monitorBtn) {
+          executeMonitorButtonAction(hit.monitorBtn.id);
+        } else {
+          setCameraPreset('mainMonitor');
         }
       } else if (hit.partId === 'sideMonitor') {
         setCameraPreset('sideMonitor');
@@ -1297,6 +1910,7 @@ export default function App() {
         setOpenModalProject(activeProjectRef.current);
       } else if (hit.partId === 'pcTower') {
         setCameraPreset('pcTower');
+        setPcTurboMode((prev) => !prev);
       }
     };
 
@@ -1306,9 +1920,9 @@ export default function App() {
 
     const cameraTargets = {
       overview: { pos: new THREE.Vector3(0, 2.55, 5.4), target: new THREE.Vector3(0, 1.35, -0.4) },
-      mainMonitor: { pos: new THREE.Vector3(0, 1.58, 1.25), target: new THREE.Vector3(0, 1.56, -0.75) },
+      mainMonitor: { pos: new THREE.Vector3(0, 1.58, 1.32), target: new THREE.Vector3(0, 1.56, -0.75) },
       sideMonitor: { pos: new THREE.Vector3(-0.75, 1.62, 1.15), target: new THREE.Vector3(-1.38, 1.58, -0.62) },
-      pcTower: { pos: new THREE.Vector3(0.85, 1.55, 1.35), target: new THREE.Vector3(1.65, 1.44, -0.52) }
+      pcTower: { pos: new THREE.Vector3(0.75, 1.54, 1.32), target: new THREE.Vector3(1.65, 1.44, -0.52) }
     };
 
     let codeScrollStep = 0;
@@ -1318,8 +1932,9 @@ export default function App() {
     const animate = (time) => {
       animFrameId = requestAnimationFrame(animate);
 
+      const fanSpeed = pcTurboRef.current ? 0.34 : 0.16;
       fans.forEach((fan) => {
-        fan.rotation.z += 0.14;
+        fan.rotation.z += fanSpeed;
       });
 
       particles.rotation.y = time * 0.00008;
@@ -1465,6 +2080,19 @@ export default function App() {
           >
             <Cpu className="w-3.5 h-3.5" />
             <span className="hidden md:inline">PC</span>
+          </button>
+
+          <button
+            onClick={() => setPcTurboMode((prev) => !prev)}
+            title="Velocidad de Ventiladores e Intensidad RGB de la PC"
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition cursor-pointer ${
+              pcTurboMode
+                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
+                : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
+            }`}
+          >
+            <Fan className={`w-3.5 h-3.5 ${pcTurboMode ? 'animate-spin' : ''}`} />
+            <span className="hidden lg:inline">{pcTurboMode ? 'Turbo RGB' : 'Fans'}</span>
           </button>
 
           <div className="h-5 w-px bg-slate-800 mx-0.5" />
