@@ -20,7 +20,8 @@ import {
   Palette,
   Eye,
   CheckCircle2,
-  Fan
+  Fan,
+  Moon
 } from 'lucide-react';
 
 // ============================================================================
@@ -302,7 +303,7 @@ const PROJECTS = [
     category: 'Entorno Interactivo Three.js',
     accent: '#00f5d4',
     summary:
-      'Bienvenido a mi espacio de trabajo virtual. Selecciona cualquiera de los proyectos del semestre en la barra inferior o haz clic directamente en los botones de la pantalla de la PC, el gabinete o los paneles RGB.',
+      'Bienvenido a mi espacio de trabajo virtual. Selecciona cualquiera de los proyectos del semestre en la barra inferior o haz clic directamente en los botones de la pantalla de la PC, el gabinete, la ventana o los paneles RGB.',
     tech: ['React', 'Three.js', 'Tailwind CSS', 'WebGL Canvas'],
     highlights: [
       'Renderizado 3D procedural en tiempo real con iluminación RGB dinámica.',
@@ -315,7 +316,7 @@ const PROJECTS = [
     codeLines: [
       '// Setup Gamer 3D - Portafolio del Semestre',
       'const scene = new THREE.Scene();',
-      'scene.fog = new THREE.FogExp2(0x05050a, 0.045);',
+      'scene.fog = new THREE.FogExp2(0x05050a, 0.042);',
       '',
       'const rgbThemes = [',
       '  { name: "Cyber", primary: "#00f5d4", secondary: "#ff007f" },',
@@ -552,15 +553,271 @@ const PAGINAWED_SECTIONS = {
 };
 
 // ============================================================================
-// 6. DEFINICIÓN DE BOTONES INTERACTIVOS DE LA PANTALLA DEL MONITOR 3D
+// 6. GENERADOR PROCEDURAL DE TEXTURAS HD PARA LA LUNA Y CIELO NOCTURNO
+// ============================================================================
+function createHDMoonTextures() {
+  const width = 2048;
+  const height = 1024;
+
+  const colorCanvas = document.createElement('canvas');
+  colorCanvas.width = width;
+  colorCanvas.height = height;
+  const ctx = colorCanvas.getContext('2d');
+
+  const bumpCanvas = document.createElement('canvas');
+  bumpCanvas.width = width;
+  bumpCanvas.height = height;
+  const bCtx = bumpCanvas.getContext('2d');
+
+  // Generador pseudoaleatorio determinista para consistencia HD
+  let seed = 75449;
+  const rand = () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
+
+  // Base de regolito lunar
+  const baseGrad = ctx.createLinearGradient(0, 0, 0, height);
+  baseGrad.addColorStop(0, '#c6ccd6');
+  baseGrad.addColorStop(0.5, '#d5dbe4');
+  baseGrad.addColorStop(1, '#bcc3ce');
+  ctx.fillStyle = baseGrad;
+  ctx.fillRect(0, 0, width, height);
+
+  bCtx.fillStyle = '#808080';
+  bCtx.fillRect(0, 0, width, height);
+
+  // Mares lunares (zonas oscuras características de la cara visible)
+  const mariaRegions = [
+    { x: 0.34, y: 0.38, rx: 190, ry: 145, rot: -0.2, alpha: 0.48 }, // Oceanus Procellarum
+    { x: 0.44, y: 0.31, rx: 145, ry: 110, rot: 0.15, alpha: 0.54 }, // Mare Imbrium
+    { x: 0.55, y: 0.35, rx: 110, ry: 95, rot: -0.1, alpha: 0.52 },  // Mare Serenitatis
+    { x: 0.62, y: 0.44, rx: 125, ry: 105, rot: 0.25, alpha: 0.56 }, // Mare Tranquillitatis
+    { x: 0.69, y: 0.49, rx: 85, ry: 75, rot: 0.1, alpha: 0.50 },    // Mare Fecunditatis
+    { x: 0.75, y: 0.39, rx: 68, ry: 62, rot: -0.3, alpha: 0.55 },   // Mare Crisium
+    { x: 0.46, y: 0.52, rx: 115, ry: 85, rot: 0.05, alpha: 0.46 },  // Mare Nubium
+    { x: 0.38, y: 0.56, rx: 85, ry: 70, rot: -0.15, alpha: 0.44 },  // Mare Humorum
+    { x: 0.53, y: 0.20, rx: 165, ry: 45, rot: 0.02, alpha: 0.42 }   // Mare Frigoris
+  ];
+
+  mariaRegions.forEach((m) => {
+    const cx = m.x * width;
+    const cy = m.y * height;
+
+    // Sub-manchas orgánicas para bordes irregulares naturales
+    for (let k = 0; k < 14; k++) {
+      const ox = cx + (rand() - 0.5) * m.rx * 0.85;
+      const oy = cy + (rand() - 0.5) * m.ry * 0.85;
+      const rad = (m.rx + m.ry) * 0.32 * (0.55 + rand() * 0.7);
+
+      const g = ctx.createRadialGradient(ox, oy, rad * 0.12, ox, oy, rad);
+      g.addColorStop(0, `rgba(74, 82, 96, ${m.alpha})`);
+      g.addColorStop(0.65, `rgba(92, 100, 115, ${m.alpha * 0.65})`);
+      g.addColorStop(1, 'rgba(130, 138, 152, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(ox, oy, rad, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Los mares son planicies ligeramente más bajas en el bump map
+      const bg = bCtx.createRadialGradient(ox, oy, rad * 0.1, ox, oy, rad);
+      bg.addColorStop(0, 'rgba(95, 95, 95, 0.35)');
+      bg.addColorStop(1, 'rgba(128, 128, 128, 0)');
+      bCtx.fillStyle = bg;
+      bCtx.beginPath();
+      bCtx.arc(ox, oy, rad, 0, Math.PI * 2);
+      bCtx.fill();
+    }
+  });
+
+  // Cráteres principales con rayos de eyección (Tycho, Copernicus, Kepler, Aristarchus)
+  const rayCraters = [
+    { x: 0.48, y: 0.76, r: 24, rays: 26, rayLen: 260 }, // Tycho
+    { x: 0.41, y: 0.43, r: 26, rays: 22, rayLen: 185 }, // Copernicus
+    { x: 0.34, y: 0.45, r: 16, rays: 16, rayLen: 120 }, // Kepler
+    { x: 0.29, y: 0.33, r: 14, rays: 14, rayLen: 105 }  // Aristarchus
+  ];
+
+  rayCraters.forEach((rc) => {
+    const cx = rc.x * width;
+    const cy = rc.y * height;
+
+    for (let i = 0; i < rc.rays; i++) {
+      const ang = (i / rc.rays) * Math.PI * 2 + (rand() - 0.5) * 0.18;
+      const len = rc.rayLen * (0.55 + rand() * 0.65);
+      const ex = cx + Math.cos(ang) * len;
+      const ey = cy + Math.sin(ang) * len;
+
+      const rayGrad = ctx.createLinearGradient(cx, cy, ex, ey);
+      rayGrad.addColorStop(0, 'rgba(248, 250, 255, 0.52)');
+      rayGrad.addColorStop(0.45, 'rgba(235, 240, 248, 0.22)');
+      rayGrad.addColorStop(1, 'rgba(235, 240, 248, 0)');
+
+      ctx.strokeStyle = rayGrad;
+      ctx.lineWidth = 1.5 + rand() * 3.5;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(ex, ey);
+      ctx.stroke();
+    }
+  });
+
+  // 420 cráteres de impacto de múltiples tamaños (color + bump map)
+  for (let i = 0; i < 420; i++) {
+    const cx = rand() * width;
+    const cy = (0.06 + rand() * 0.88) * height;
+    const tier = rand();
+    const radius =
+      tier > 0.94
+        ? 22 + rand() * 26
+        : tier > 0.72
+        ? 9 + rand() * 14
+        : 2.5 + rand() * 6.5;
+
+    // Halo brillante de eyección alrededor del cráter
+    const ejecta = ctx.createRadialGradient(cx, cy, radius * 0.8, cx, cy, radius * 1.9);
+    ejecta.addColorStop(0, 'rgba(235, 240, 248, 0.26)');
+    ejecta.addColorStop(1, 'rgba(235, 240, 248, 0)');
+    ctx.fillStyle = ejecta;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.9, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Interior del cráter con sombreado direccional
+    const bowl = ctx.createRadialGradient(
+      cx - radius * 0.25,
+      cy - radius * 0.25,
+      radius * 0.1,
+      cx,
+      cy,
+      radius
+    );
+    bowl.addColorStop(0, 'rgba(110, 118, 132, 0.55)');
+    bowl.addColorStop(0.78, 'rgba(155, 163, 178, 0.45)');
+    bowl.addColorStop(1, 'rgba(240, 244, 250, 0.65)');
+    ctx.fillStyle = bowl;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Borde elevado en el Bump Map (blanco = alto, oscuro = cuenca honda)
+    const bumpBowl = bCtx.createRadialGradient(cx, cy, radius * 0.1, cx, cy, radius * 1.25);
+    bumpBowl.addColorStop(0, 'rgba(40, 40, 40, 0.75)');
+    bumpBowl.addColorStop(0.75, 'rgba(85, 85, 85, 0.65)');
+    bumpBowl.addColorStop(0.9, 'rgba(235, 235, 235, 0.85)');
+    bumpBowl.addColorStop(1, 'rgba(128, 128, 128, 0)');
+    bCtx.fillStyle = bumpBowl;
+    bCtx.beginPath();
+    bCtx.arc(cx, cy, radius * 1.25, 0, Math.PI * 2);
+    bCtx.fill();
+
+    // Pico central para cráteres grandes
+    if (radius > 16) {
+      ctx.fillStyle = 'rgba(238, 242, 248, 0.7)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius * 0.14, 0, Math.PI * 2);
+      ctx.fill();
+
+      bCtx.fillStyle = 'rgba(225, 225, 225, 0.9)';
+      bCtx.beginPath();
+      bCtx.arc(cx, cy, radius * 0.15, 0, Math.PI * 2);
+      bCtx.fill();
+    }
+  }
+
+  // Micro-textura granular HD tileable sobre toda la superficie
+  const grainCanvas = document.createElement('canvas');
+  grainCanvas.width = 256;
+  grainCanvas.height = 256;
+  const gCtx = grainCanvas.getContext('2d');
+  for (let gx = 0; gx < 256; gx += 2) {
+    for (let gy = 0; gy < 256; gy += 2) {
+      const v = Math.floor(105 + rand() * 55);
+      gCtx.fillStyle = `rgba(${v},${v},${v + 6},0.12)`;
+      gCtx.fillRect(gx, gy, 2, 2);
+    }
+  }
+  const grainPattern = ctx.createPattern(grainCanvas, 'repeat');
+  if (grainPattern) {
+    ctx.fillStyle = grainPattern;
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  // Halo atmosférico suave de la Luna
+  const glowCanvas = document.createElement('canvas');
+  glowCanvas.width = 512;
+  glowCanvas.height = 512;
+  const glCtx = glowCanvas.getContext('2d');
+  const glGrad = glCtx.createRadialGradient(256, 256, 95, 256, 256, 256);
+  glGrad.addColorStop(0, 'rgba(219, 234, 254, 0.65)');
+  glGrad.addColorStop(0.35, 'rgba(147, 197, 253, 0.25)');
+  glGrad.addColorStop(0.7, 'rgba(59, 130, 246, 0.07)');
+  glGrad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+  glCtx.fillStyle = glGrad;
+  glCtx.fillRect(0, 0, 512, 512);
+
+  // Cielo nocturno estrellado HD fuera de la ventana
+  const skyCanvas = document.createElement('canvas');
+  skyCanvas.width = 1024;
+  skyCanvas.height = 1024;
+  const sCtx = skyCanvas.getContext('2d');
+  const skyGrad = sCtx.createLinearGradient(0, 0, 0, 1024);
+  skyGrad.addColorStop(0, '#02040a');
+  skyGrad.addColorStop(0.55, '#070d1f');
+  skyGrad.addColorStop(1, '#0f1c3f');
+  sCtx.fillStyle = skyGrad;
+  sCtx.fillRect(0, 0, 1024, 1024);
+
+  // Nebulosa sutil de Vía Láctea
+  const nebGrad = sCtx.createRadialGradient(512, 420, 40, 512, 420, 460);
+  nebGrad.addColorStop(0, 'rgba(56, 189, 248, 0.14)');
+  nebGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.08)');
+  nebGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
+  sCtx.fillStyle = nebGrad;
+  sCtx.fillRect(0, 0, 1024, 1024);
+
+  // Estrellas HD
+  for (let s = 0; s < 520; s++) {
+    const sx = rand() * 1024;
+    const sy = rand() * 920;
+    const sr = rand() > 0.92 ? 1.7 + rand() * 1.3 : 0.6 + rand() * 1.0;
+    const alpha = 0.35 + rand() * 0.65;
+    sCtx.fillStyle =
+      rand() > 0.82
+        ? `rgba(186, 230, 253, ${alpha})`
+        : rand() > 0.5
+        ? `rgba(255, 255, 255, ${alpha})`
+        : `rgba(254, 243, 199, ${alpha})`;
+    sCtx.beginPath();
+    sCtx.arc(sx, sy, sr, 0, Math.PI * 2);
+    sCtx.fill();
+  }
+
+  const colorTexture = new THREE.CanvasTexture(colorCanvas);
+  colorTexture.colorSpace = THREE.SRGBColorSpace;
+  colorTexture.anisotropy = 8;
+
+  const bumpTexture = new THREE.CanvasTexture(bumpCanvas);
+  bumpTexture.anisotropy = 8;
+
+  const glowTexture = new THREE.CanvasTexture(glowCanvas);
+  glowTexture.colorSpace = THREE.SRGBColorSpace;
+
+  const skyTexture = new THREE.CanvasTexture(skyCanvas);
+  skyTexture.colorSpace = THREE.SRGBColorSpace;
+
+  return { colorTexture, bumpTexture, glowTexture, skyTexture };
+}
+
+// ============================================================================
+// 7. DEFINICIÓN DE BOTONES INTERACTIVOS DE LA PANTALLA DEL MONITOR 3D
 // ============================================================================
 function getMonitorButtons(projectId) {
   const buttons = [
-    // Botones de control de ventana superior
     { id: 'win_home', x: 14, y: 12, w: 22, h: 22, label: 'Volver a Inicio OS' },
     { id: 'win_open', x: 58, y: 12, w: 22, h: 22, label: 'Abrir Vista Completa' },
 
-    // Barra de botones inferior dentro de la pantalla de la PC (igual que la barra de abajo)
+    // Barra de botones inferior dentro de la pantalla de la PC
     { id: 'nav_0', x: 40, y: 582, w: 165, h: 46, label: 'Inicio OS' },
     { id: 'nav_1', x: 215, y: 582, w: 175, h: 46, label: '01. Pokédex' },
     { id: 'nav_2', x: 400, y: 582, w: 185, h: 46, label: '02. PaginaWed' },
@@ -605,7 +862,7 @@ function getMonitorButtons(projectId) {
 }
 
 // ============================================================================
-// 7. GENERADORES DE TEXTURAS PARA LAS PANTALLAS 3D
+// 8. GENERADORES DE TEXTURAS PARA LAS PANTALLAS 3D
 // ============================================================================
 function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hoveredBtnId) {
   ctx.clearRect(0, 0, width, height);
@@ -649,9 +906,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
   ctx.fillText('● PANTALLA TÁCTIL / INTERACTIVA', width - 24, 28);
   ctx.textAlign = 'left';
 
-  // --------------------------------------------------------------------------
-  // VISTA 0: HUB PRINCIPAL
-  // --------------------------------------------------------------------------
   if (project.id === 'hub') {
     ctx.strokeStyle = 'rgba(255,255,255,0.04)';
     ctx.lineWidth = 1;
@@ -719,9 +973,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     });
   }
 
-  // --------------------------------------------------------------------------
-  // VISTA 1: POKÉDEX INTERACTIVA EN PANTALLA 3D
-  // --------------------------------------------------------------------------
   if (project.id === 'pokedex') {
     const activePoke = MONITOR_POKEMON_PRESETS[subState.pokeIndex] || MONITOR_POKEMON_PRESETS[0];
 
@@ -733,7 +984,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     ctx.textAlign = 'center';
     ctx.fillText('Pokédex Básica — Selección Rápida en Pantalla', width / 2, 92);
 
-    // Botones rápidos de Pokémon
     MONITOR_POKEMON_PRESETS.forEach((p, idx) => {
       const bx = 190 + idx * 145;
       const by = 112;
@@ -754,7 +1004,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
       ctx.fillText(p.name.toUpperCase(), bx + bw / 2, by + 24);
     });
 
-    // Botón para abrir la app completa
     const liveHovered = hoveredBtnId === 'poke_live';
     ctx.fillStyle = liveHovered ? '#0f172a' : '#1e293b';
     ctx.beginPath(); ctx.roundRect(785, 112, 295, 38, 8); ctx.fill();
@@ -765,7 +1014,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     ctx.font = 'bold 15px sans-serif';
     ctx.fillText('▶ Abrir Pokédex Interactiva Real', 785 + 295 / 2, 136);
 
-    // Tarjeta Pokémon
     ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.roundRect(width / 2 - 360, 166, 720, 392, 16); ctx.fill();
 
@@ -814,9 +1062,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     ctx.textAlign = 'left';
   }
 
-  // --------------------------------------------------------------------------
-  // VISTA 2: PAGINAWED INTERACTIVA EN PANTALLA 3D
-  // --------------------------------------------------------------------------
   if (project.id === 'paginawed') {
     const activeSecName = subState.webSection || 'Inicio';
     const secData = PAGINAWED_SECTIONS[activeSecName] || PAGINAWED_SECTIONS.Inicio;
@@ -891,9 +1136,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     });
   }
 
-  // --------------------------------------------------------------------------
-  // VISTA 3: MINIDBEAVER INTERACTIVO EN PANTALLA 3D
-  // --------------------------------------------------------------------------
   if (project.id === 'minidbeaver') {
     const activeSql = SQL_PRESETS[subState.sqlIndex] || SQL_PRESETS[0];
 
@@ -912,7 +1154,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     ctx.fillText('▶ Ejecutar Siguiente Query SQL', 965 + 285 / 2, 74);
     ctx.textAlign = 'left';
 
-    // Panel izquierdo
     ctx.fillStyle = '#13111c';
     ctx.fillRect(0, 92, 290, height - 160);
     ctx.fillStyle = '#c084fc';
@@ -958,7 +1199,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     ctx.fillText('Abrir Editor SQL Completo ↗', 18 + 254 / 2, 519);
     ctx.textAlign = 'left';
 
-    // Editor SQL superior derecho
     ctx.fillStyle = '#0d0c14';
     ctx.fillRect(295, 92, width - 295, 165);
     ctx.fillStyle = '#64748b';
@@ -974,7 +1214,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
       ctx.fillText(q.slice(68), 320, 190);
     }
 
-    // Tabla de resultados
     ctx.fillStyle = '#181626';
     ctx.fillRect(295, 260, width - 295, height - 328);
 
@@ -994,9 +1233,7 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     });
   }
 
-  // --------------------------------------------------------------------------
-  // BARRA DE BOTONES INFERIOR DENTRO DE LA PANTALLA DE LA PC (TASKBAR OS)
-  // --------------------------------------------------------------------------
+  // Barra de botones inferior dentro de la pantalla de la PC
   ctx.fillStyle = 'rgba(5, 8, 17, 0.96)';
   ctx.fillRect(0, 572, width, 68);
   ctx.strokeStyle = theme.primary;
@@ -1035,7 +1272,6 @@ function drawMainMonitorCanvas(ctx, width, height, project, theme, subState, hov
     ctx.lineWidth = isHovered || btn.active ? 2.5 : 1.5;
     ctx.stroke();
 
-    // Punto indicador de color
     ctx.fillStyle = btn.accent;
     ctx.beginPath();
     ctx.arc(btn.x + 18, by + bh / 2, 5, 0, Math.PI * 2);
@@ -1089,7 +1325,6 @@ function drawVerticalCodeCanvas(ctx, width, height, project, theme, scrollOffset
     ctx.fillText(text, 74, y);
   }
 
-  // Botón inferior en monitor vertical
   ctx.fillStyle = '#1e293b';
   ctx.beginPath();
   ctx.roundRect(28, height - 74, width - 56, 50, 12);
@@ -1105,7 +1340,7 @@ function drawVerticalCodeCanvas(ctx, width, height, project, theme, scrollOffset
 }
 
 // ============================================================================
-// 8. COMPONENTE PRINCIPAL DEL PORTAFOLIO 3D
+// 9. COMPONENTE PRINCIPAL DEL PORTAFOLIO 3D
 // ============================================================================
 export default function App() {
   const mountRef = useRef(null);
@@ -1173,7 +1408,7 @@ export default function App() {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#05050a');
-    scene.fog = new THREE.FogExp2('#05050a', 0.042);
+    scene.fog = new THREE.FogExp2('#05050a', 0.036);
 
     const camera = new THREE.PerspectiveCamera(
       45,
@@ -1195,7 +1430,7 @@ export default function App() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
-    controls.minDistance = 1.65;
+    controls.minDistance = 1.55;
     controls.maxDistance = 8.5;
     controls.maxPolarAngle = Math.PI / 2 - 0.04;
     controls.target.set(0, 1.35, -0.4);
@@ -1205,7 +1440,7 @@ export default function App() {
     };
     controls.addEventListener('start', handleStartOrbit);
 
-    // ILUMINACIÓN DEL CUARTO OSCURO + LUCES RGB
+    // ILUMINACIÓN DEL CUARTO OSCURO + LUCES RGB + LUZ DE LUNA
     const hemiLight = new THREE.HemisphereLight('#2a2d4a', '#09090f', 0.65);
     scene.add(hemiLight);
 
@@ -1217,7 +1452,6 @@ export default function App() {
     wallRgbLight.position.set(-1.6, 2.7, -1.3);
     scene.add(wallRgbLight);
 
-    // Luces RGB dedicadas al interior y frente de la PC
     const pcInteriorLight = new THREE.PointLight(themeRef.current.primary, 5.2, 3.6);
     pcInteriorLight.position.set(1.62, 1.48, -0.48);
     scene.add(pcInteriorLight);
@@ -1230,7 +1464,18 @@ export default function App() {
     screenGlowLight.position.set(0, 1.55, -0.1);
     scene.add(screenGlowLight);
 
-    // HABITACIÓN
+    // Luz plateada de la Luna entrando por la ventana
+    const moonBeamLight = new THREE.DirectionalLight('#bae6fd', 1.25);
+    moonBeamLight.position.set(-5.55, 2.8, -1.65);
+    moonBeamLight.target.position.set(-0.5, 1.0, -0.2);
+    scene.add(moonBeamLight);
+    scene.add(moonBeamLight.target);
+
+    const moonLocalLight = new THREE.PointLight('#dbeafe', 2.4, 5.5);
+    moonLocalLight.position.set(-4.8, 2.45, -1.1);
+    scene.add(moonLocalLight);
+
+    // HABITACIÓN (CON ABERTURA REAL EN LA PARED IZQUIERDA PARA LA VENTANA)
     const floorMat = new THREE.MeshStandardMaterial({ color: '#0c0d14', roughness: 0.75, metalness: 0.1 });
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), floorMat);
     floor.rotation.x = -Math.PI / 2;
@@ -1243,25 +1488,167 @@ export default function App() {
     backWall.receiveShadow = true;
     scene.add(backWall);
 
-    const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(16, 8), wallMat);
-    leftWall.rotation.y = Math.PI / 2;
-    leftWall.position.set(-4.2, 4, 2);
-    scene.add(leftWall);
+    // Muro izquierdo dividido alrededor del hueco de la ventana (y: 1.25..3.45, z: -1.20..0.80)
+    const leftWallBottom = new THREE.Mesh(new THREE.PlaneGeometry(16, 1.25), wallMat);
+    leftWallBottom.rotation.y = Math.PI / 2;
+    leftWallBottom.position.set(-4.2, 0.625, 2);
+    scene.add(leftWallBottom);
 
-    const windowFrame = new THREE.Mesh(
-      new THREE.BoxGeometry(0.12, 2.2, 1.6),
-      new THREE.MeshStandardMaterial({ color: '#090a0f' })
-    );
-    windowFrame.position.set(-4.14, 2.3, -0.1);
-    scene.add(windowFrame);
+    const leftWallTop = new THREE.Mesh(new THREE.PlaneGeometry(16, 4.55), wallMat);
+    leftWallTop.rotation.y = Math.PI / 2;
+    leftWallTop.position.set(-4.2, 5.725, 2);
+    scene.add(leftWallTop);
 
+    const leftWallBack = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 2.2), wallMat);
+    leftWallBack.rotation.y = Math.PI / 2;
+    leftWallBack.position.set(-4.2, 2.35, -3.6);
+    scene.add(leftWallBack);
+
+    const leftWallFront = new THREE.Mesh(new THREE.PlaneGeometry(9.2, 2.2), wallMat);
+    leftWallFront.rotation.y = Math.PI / 2;
+    leftWallFront.position.set(-4.2, 2.35, 5.4);
+    scene.add(leftWallFront);
+
+    // ========================================================================
+    // VENTANA PANORÁMICA + LUNA 3D EN HD + CIELO NOCTURNO ESTRELLADO
+    // ========================================================================
+    const interactiveMeshes = [];
+    const {
+      colorTexture: moonColorTex,
+      bumpTexture: moonBumpTex,
+      glowTexture: moonGlowTex,
+      skyTexture: nightSkyTex
+    } = createHDMoonTextures();
+
+    const windowGroup = new THREE.Group();
+    const frameMat = new THREE.MeshStandardMaterial({ color: '#090b12', metalness: 0.6, roughness: 0.35 });
+
+    // Marco exterior de la ventana
+    const frameTop = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.08, 2.08), frameMat);
+    frameTop.position.set(-4.2, 3.45, -0.2);
+    windowGroup.add(frameTop);
+
+    const frameBottom = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.08, 2.14), frameMat);
+    frameBottom.position.set(-4.18, 1.25, -0.2);
+    windowGroup.add(frameBottom);
+
+    const frameLeft = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.24, 0.08), frameMat);
+    frameLeft.position.set(-4.2, 2.35, -1.2);
+    windowGroup.add(frameLeft);
+
+    const frameRight = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.24, 0.08), frameMat);
+    frameRight.position.set(-4.2, 2.35, 0.8);
+    windowGroup.add(frameRight);
+
+    // Divisor vertical sutil a la derecha para no tapar la Luna
+    const mullion = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2.16, 0.035), frameMat);
+    mullion.position.set(-4.2, 2.35, 0.22);
+    windowGroup.add(mullion);
+
+    // Cristal de ventana con ligero reflejo azulado e interactividad
     const windowGlass = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.42, 2.02),
-      new THREE.MeshBasicMaterial({ color: '#172554' })
+      new THREE.PlaneGeometry(1.96, 2.14),
+      new THREE.MeshPhysicalMaterial({
+        color: '#bae6fd',
+        transparent: true,
+        opacity: 0.07,
+        roughness: 0.05,
+        metalness: 0.1
+      })
     );
     windowGlass.rotation.y = Math.PI / 2;
-    windowGlass.position.set(-4.07, 2.3, -0.1);
-    scene.add(windowGlass);
+    windowGlass.position.set(-4.19, 2.35, -0.2);
+    windowGlass.userData = {
+      partId: 'windowMoon',
+      label: 'Ventana Nocturna: Clic para admirar la Luna en HD'
+    };
+    windowGroup.add(windowGlass);
+    interactiveMeshes.push(windowGlass);
+
+    // Fondo estrellado nocturno detrás de la ventana (cerrado para evitar huecos)
+    const skyBackdrop = new THREE.Mesh(
+      new THREE.PlaneGeometry(9.5, 6.2),
+      new THREE.MeshBasicMaterial({ map: nightSkyTex, fog: false })
+    );
+    skyBackdrop.rotation.y = Math.PI / 2;
+    skyBackdrop.position.set(-6.9, 2.6, -0.6);
+    windowGroup.add(skyBackdrop);
+
+    const skySideNorth = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.2, 6.2),
+      new THREE.MeshBasicMaterial({ color: '#040814', fog: false })
+    );
+    skySideNorth.position.set(-5.5, 2.6, -4.6);
+    windowGroup.add(skySideNorth);
+
+    const skySideSouth = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.2, 6.2),
+      new THREE.MeshBasicMaterial({ color: '#040814', fog: false })
+    );
+    skySideSouth.rotation.y = Math.PI;
+    skySideSouth.position.set(-5.5, 2.6, 3.2);
+    windowGroup.add(skySideSouth);
+
+    // LUNA 3D EN HD (alineada directamente en la línea de visión de la ventana)
+    const moonMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(0.58, 64, 64),
+      new THREE.MeshStandardMaterial({
+        map: moonColorTex,
+        bumpMap: moonBumpTex,
+        bumpScale: 0.022,
+        roughness: 0.88,
+        metalness: 0.02,
+        emissive: new THREE.Color('#dbeafe'),
+        emissiveMap: moonColorTex,
+        emissiveIntensity: 0.62,
+        fog: false
+      })
+    );
+    moonMesh.position.set(-5.55, 2.46, -1.62);
+    moonMesh.rotation.y = 0.68;
+    moonMesh.userData = {
+      partId: 'windowMoon',
+      label: 'Luna HD: Clic para enfocar de cerca'
+    };
+    windowGroup.add(moonMesh);
+    interactiveMeshes.push(moonMesh);
+
+    // Halo luminoso alrededor de la Luna
+    const moonHalo = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: moonGlowTex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        opacity: 0.85,
+        depthWrite: false,
+        fog: false
+      })
+    );
+    moonHalo.position.set(-5.68, 2.46, -1.66);
+    moonHalo.scale.set(2.45, 2.45, 1);
+    windowGroup.add(moonHalo);
+
+    // Nubes nocturnas suaves pasando cerca de la parte baja de la Luna
+    const cloudsGroup = new THREE.Group();
+    const cloudMat = new THREE.MeshBasicMaterial({
+      color: '#1e3a8a',
+      transparent: true,
+      opacity: 0.16,
+      fog: false
+    });
+    [
+      { y: 1.88, z: -1.35, w: 1.4, h: 0.14 },
+      { y: 2.02, z: -1.85, w: 1.7, h: 0.12 },
+      { y: 1.76, z: -0.95, w: 1.5, h: 0.16 }
+    ].forEach((c) => {
+      const cloud = new THREE.Mesh(new THREE.PlaneGeometry(c.w, c.h), cloudMat);
+      cloud.rotation.y = Math.PI / 2;
+      cloud.position.set(-4.85, c.y, c.z);
+      cloudsGroup.add(cloud);
+    });
+    windowGroup.add(cloudsGroup);
+
+    scene.add(windowGroup);
 
     // ESCRITORIO GAMER CON TIRA LED RGB
     const deskGroup = new THREE.Group();
@@ -1293,8 +1680,6 @@ export default function App() {
       deskGroup.add(leg);
     });
     scene.add(deskGroup);
-
-    const interactiveMeshes = [];
 
     // 1. MONITOR CURVO ULTRAWIDE PRINCIPAL (INTERACTIVO POR UV)
     const mainCanvas = document.createElement('canvas');
@@ -1403,7 +1788,6 @@ export default function App() {
       roughness: 0.3
     });
 
-    // Hitbox invisible para seleccionar toda la PC fácilmente
     const pcHitbox = new THREE.Mesh(
       new THREE.BoxGeometry(0.56, 1.0, 1.0),
       new THREE.MeshBasicMaterial({ visible: false })
@@ -1415,7 +1799,6 @@ export default function App() {
     pcGroup.add(pcHitbox);
     interactiveMeshes.push(pcHitbox);
 
-    // Estructura hueca del gabinete (base PSU, techo, pared trasera, pared derecha, pilares)
     const psuShroud = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.2, 0.96), chassisMat);
     psuShroud.position.set(0, -0.39, 0);
     pcGroup.add(psuShroud);
@@ -1432,7 +1815,6 @@ export default function App() {
     rightPanel.position.set(0.24, 0, 0);
     pcGroup.add(rightPanel);
 
-    // Pilares frontales y esquinas
     [
       [-0.24, 0.46],
       [0.24, 0.46],
@@ -1443,7 +1825,6 @@ export default function App() {
       pcGroup.add(pillar);
     });
 
-    // Tiras LED RGB interiores (superior, inferior sobre PSU y frontal)
     const pcLedPrimaryMat = new THREE.MeshBasicMaterial({ color: themeRef.current.primary });
     const pcLedSecondaryMat = new THREE.MeshBasicMaterial({ color: themeRef.current.secondary });
 
@@ -1463,7 +1844,6 @@ export default function App() {
     frontLedRight.position.set(0.25, 0, 0.482);
     pcGroup.add(frontLedRight);
 
-    // Motherboard + Bloque AIO RGB + Memorias RAM RGB
     const mobo = new THREE.Mesh(
       new THREE.BoxGeometry(0.03, 0.62, 0.56),
       new THREE.MeshStandardMaterial({ color: '#111827', metalness: 0.4, roughness: 0.5 })
@@ -1487,7 +1867,6 @@ export default function App() {
     cpuPumpRing.position.set(0.132, 0.16, -0.06);
     pcGroup.add(cpuPumpRing);
 
-    // 2 Sticks de Memoria RAM RGB
     [-0.17, -0.21].forEach((rz, idx) => {
       const ram = new THREE.Mesh(
         new THREE.BoxGeometry(0.035, 0.22, 0.014),
@@ -1497,7 +1876,6 @@ export default function App() {
       pcGroup.add(ram);
     });
 
-    // Tarjeta Gráfica RTX con barra RGB
     const gpuMesh = new THREE.Mesh(
       new THREE.BoxGeometry(0.26, 0.075, 0.62),
       new THREE.MeshStandardMaterial({ color: '#1e293b', metalness: 0.8, roughness: 0.2 })
@@ -1509,7 +1887,6 @@ export default function App() {
     gpuStrip.position.set(-0.082, -0.08, 0.02);
     pcGroup.add(gpuStrip);
 
-    // Función constructora de ventiladores RGB con doble aro LED y aspas iluminadas
     const fans = [];
     const bladeMat = new THREE.MeshStandardMaterial({
       color: '#cbd5e1',
@@ -1522,28 +1899,24 @@ export default function App() {
     function createRgbFan(radius = 0.105) {
       const fanUnit = new THREE.Group();
 
-      // Marco oscuro del ventilador
       const outerHousing = new THREE.Mesh(
         new THREE.TorusGeometry(radius + 0.012, 0.012, 10, 28),
         new THREE.MeshStandardMaterial({ color: '#090b10', roughness: 0.4 })
       );
       fanUnit.add(outerHousing);
 
-      // Aro LED RGB exterior
       const outerRing = new THREE.Mesh(
         new THREE.TorusGeometry(radius, 0.013, 14, 32),
         pcLedPrimaryMat
       );
       fanUnit.add(outerRing);
 
-      // Aro LED RGB interior
       const innerRing = new THREE.Mesh(
         new THREE.TorusGeometry(radius * 0.36, 0.008, 12, 24),
         pcLedSecondaryMat
       );
       fanUnit.add(innerRing);
 
-      // Grupo de 7 aspas giratorias
       const rotor = new THREE.Group();
       const hub = new THREE.Mesh(
         new THREE.CylinderGeometry(radius * 0.3, radius * 0.3, 0.024, 20),
@@ -1573,14 +1946,12 @@ export default function App() {
       return fanUnit;
     }
 
-    // 3 Ventiladores frontales RGB de 120mm (orientados hacia +Z)
     [0.28, 0.02, -0.24].forEach((fy) => {
       const frontFan = createRgbFan(0.112);
       frontFan.position.set(0, fy, 0.435);
       pcGroup.add(frontFan);
     });
 
-    // 2 Ventiladores superiores RGB del radiador (orientados hacia abajo)
     [0.12, -0.18].forEach((fz) => {
       const topFan = createRgbFan(0.105);
       topFan.rotation.x = Math.PI / 2;
@@ -1588,12 +1959,10 @@ export default function App() {
       pcGroup.add(topFan);
     });
 
-    // 1 Ventilador trasero RGB de extracción
     const rearFan = createRgbFan(0.105);
     rearFan.position.set(-0.02, 0.25, -0.415);
     pcGroup.add(rearFan);
 
-    // 2 Ventiladores RGB debajo de la tarjeta gráfica RTX
     [0.15, -0.11].forEach((gz) => {
       const gpuFan = createRgbFan(0.082);
       gpuFan.rotation.x = Math.PI / 2;
@@ -1601,7 +1970,6 @@ export default function App() {
       pcGroup.add(gpuFan);
     });
 
-    // Paneles de cristal templado (lateral izquierdo y frontal)
     const sideGlassPanel = new THREE.Mesh(
       new THREE.PlaneGeometry(0.88, 0.72),
       new THREE.MeshPhysicalMaterial({
@@ -1911,6 +2279,8 @@ export default function App() {
       } else if (hit.partId === 'pcTower') {
         setCameraPreset('pcTower');
         setPcTurboMode((prev) => !prev);
+      } else if (hit.partId === 'windowMoon') {
+        setCameraPreset('window');
       }
     };
 
@@ -1922,7 +2292,8 @@ export default function App() {
       overview: { pos: new THREE.Vector3(0, 2.55, 5.4), target: new THREE.Vector3(0, 1.35, -0.4) },
       mainMonitor: { pos: new THREE.Vector3(0, 1.58, 1.32), target: new THREE.Vector3(0, 1.56, -0.75) },
       sideMonitor: { pos: new THREE.Vector3(-0.75, 1.62, 1.15), target: new THREE.Vector3(-1.38, 1.58, -0.62) },
-      pcTower: { pos: new THREE.Vector3(0.75, 1.54, 1.32), target: new THREE.Vector3(1.65, 1.44, -0.52) }
+      pcTower: { pos: new THREE.Vector3(0.75, 1.54, 1.32), target: new THREE.Vector3(1.65, 1.44, -0.52) },
+      window: { pos: new THREE.Vector3(-2.35, 2.34, 0.42), target: new THREE.Vector3(-5.55, 2.46, -1.62) }
     };
 
     let codeScrollStep = 0;
@@ -1936,6 +2307,10 @@ export default function App() {
       fans.forEach((fan) => {
         fan.rotation.z += fanSpeed;
       });
+
+      // Libración/rotación muy sutil de la Luna y desplazamiento suave de nubes
+      moonMesh.rotation.y = 0.68 + Math.sin(time * 0.00018) * 0.06;
+      cloudsGroup.position.z = Math.sin(time * 0.00025) * 0.28;
 
       particles.rotation.y = time * 0.00008;
 
@@ -1981,6 +2356,10 @@ export default function App() {
       renderer.domElement.removeEventListener('pointerup', onPointerUp);
       mainTexture.dispose();
       sideTexture.dispose();
+      moonColorTex.dispose();
+      moonBumpTex.dispose();
+      moonGlowTex.dispose();
+      nightSkyTex.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
@@ -2080,6 +2459,19 @@ export default function App() {
           >
             <Cpu className="w-3.5 h-3.5" />
             <span className="hidden md:inline">PC</span>
+          </button>
+
+          <button
+            onClick={() => setCameraPreset('window')}
+            title="Mirar Luna HD en la Ventana"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+              cameraPreset === 'window'
+                ? 'bg-slate-800 text-sky-200 border border-sky-500/50'
+                : 'text-slate-400 hover:text-sky-200'
+            }`}
+          >
+            <Moon className="w-3.5 h-3.5 text-sky-300" />
+            <span className="hidden md:inline">Luna</span>
           </button>
 
           <button
