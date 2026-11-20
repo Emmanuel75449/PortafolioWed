@@ -49,19 +49,18 @@ const DEV_PROFILE = {
   titulo: 'Desarrollador Web & Software Full-Stack',
   subtitulo: 'Portafolio de Proyectos del Semestre • React • JavaScript • SQL',
   ubicacion: 'México',
-  disponibilidad: 'Disponible para prácticas profesionales y proyectos Jr.',
-  bio: 'Estudiante de desarrollo de software apasionado por construir interfaces web interactivas, aplicaciones conectadas a APIs reales y herramientas de gestión de bases de datos.',
+  disponibilidad: 'Disponible si tengo tiempo',
+  bio: 'Estudiante de desarrollo de software que le gusta hacer cosas de ingenieria aunque puede fallar en el intento jeje',
   github: 'https://github.com/Emmanuel75449',
   linkedin: 'https://www.linkedin.com/',
-  email: 'tu.correo@ejemplo.com',
+  email: 'al075449@uacam.mx',
   skills: [
     'HTML5 / CSS3',
     'JavaScript (ES6+)',
     'React & Three.js',
     'Tailwind CSS',
-    'SQL & Bases de Datos',
-    'Consumo de APIs REST',
-    'Git & GitHub'
+    'Dibujas a mano alzada',
+   
   ]
 };
 
